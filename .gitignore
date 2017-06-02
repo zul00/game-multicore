@@ -10,4 +10,5 @@
 *.swp
 *.xmd
 *~
+obj/*
 tags
