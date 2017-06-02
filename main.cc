@@ -14,7 +14,7 @@ int main()
   FILE **fl;
 
   // Allocate pointer to pointer of file
-  fl = malloc(sizeof(FILE*));
+  fl = (FILE**)malloc(sizeof(FILE*));
 
   printf("Hello Game!!!\n");
 

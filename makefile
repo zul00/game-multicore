@@ -12,14 +12,14 @@ OBJDIR = obj
 # Specify library
 CFLAGS = -Wall -Wextra -g
 
-# List C files
-SRC = $(wildcard *.c)
+# List CC files
+SRC = $(wildcard *.cc)
 
 # List dependencies
 DEP = $(wildcard *.h)
 
 # Target O files, at OBJDIR
-_OBJ = $(patsubst %.c, %.o, $(SRC))
+_OBJ = $(patsubst %.cc, %.o, $(SRC))
 OBJ = $(patsubst %, $(OBJDIR)/%, $(_OBJ))
 
 # Main Rule
@@ -31,7 +31,7 @@ $(BIN): $(OBJ)
 	ctags -R
 
 # Rule for OBJECT
-$(OBJDIR)/%.o: %.c $(DEPS) | $(OBJDIR)
+$(OBJDIR)/%.o: %.cc $(DEPS) | $(OBJDIR)
 	gcc -c -g $< -o $@ $(LDLIBS)
 
 # Create OBJDIR if not exist
