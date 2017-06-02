@@ -6,6 +6,10 @@
 
 #define MAX_PATH 50
 
+/**
+ * @brief Open file stream
+ * @return status
+ */
 int16_t input_open(void)
 {
   char path[MAX_PATH];
@@ -30,6 +34,17 @@ int16_t input_open(void)
   }
 
   // Close stream
+  input_close(fl);
+
+  return 0;
+}
+
+/**
+ * @brief Close file stream
+ * @return status
+ */
+int16_t input_close(FILE* fl)
+{
   fclose(fl);
 
   return 0;
