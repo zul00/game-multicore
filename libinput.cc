@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <fcntl.h>
+
+#include <linux/input.h>
+
 #include "libinput.h"
 
 #define EVENT_PATH "/dev/input/event0"
@@ -21,7 +24,6 @@ int16_t input_open(FILE **fl)
 
     return -1;
   }
-
 
   return 0;
 }
@@ -45,11 +47,12 @@ int16_t input_close(FILE* fl)
  */
 int16_t input_read(FILE* fl)
 {
-  char data;
+  struct input_event ev;
 
-  fread(&data, sizeof(data), 1, fl);
+  fread(&ev, sizeof(ev), 1, fl);
 
-  printf("input = %X\n", data);
+  printf("time %u; type =  %X; code = %X; value = %X\n",
+      ev.time, ev.type, ev.code, ev.value);
 
   return 0;
 }
