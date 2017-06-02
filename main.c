@@ -11,11 +11,26 @@
 
 int main()
 {
+  FILE **fl;
+
+  // Allocate pointer to pointer of file
+  fl = malloc(sizeof(FILE*));
+
   printf("Hello Game!!!\n");
 
-  input_open();
+  // Open stream
+  input_open(fl);
 
-  printf("End of Game\n");
+  // Read stream
+  while (1)
+  {
+    input_read(*fl);
+  }
+
+  // Close stream
+  input_close(*fl);
+
+  printf("Game Over\n");
 
   return 0;
 }
