@@ -47,12 +47,14 @@ int16_t input_close(FILE* fl)
  */
 int16_t input_read(FILE* fl)
 {
-  struct input_event ev;
+  char data;
 
-  fread(&ev, sizeof(ev), 1, fl);
+  fread(&data, sizeof(data), 1, fl);
 
-  printf("time %u; type =  %X; code = %X; value = %X\n",
-      ev.time, ev.type, ev.code, ev.value);
+  printf("data = %X\n", data);
+
+  //printf("time %u; type =  %X; code = %X; value = %X\n",
+  //    ev.time, ev.type, ev.code, ev.value);
 
   return 0;
 }

@@ -1,50 +1,12 @@
-# Simple makefile
-# @auth: Zulkarnaen
+SOC_HOME=/local/rts2/starburst_32cores
+include $(SOC_HOME)/src/os/Makefile_app.inc
+PROJECT=pingpong
+SRC=$(wildcard *.cc)
 
-# Binary name
-PROJECT = game
-# BIN = $(patsubt %, %, $(PROJECT))
-BIN = $(PROJECT).bin
+.PHONY: all
+.DEFAULT_GOAL: all
 
-# Specify source directory and object directory
-OBJDIR = obj
+all: $(PROJECT).nc $(PROJECT).xmd
+	./$(PROJECT).nc
 
-# Specify library
-CFLAGS = -Wall -Wextra -g
-
-# List CC files
-SRC = $(wildcard *.cc)
-
-# List dependencies
-DEP = $(wildcard *.h)
-
-# Target O files, at OBJDIR
-_OBJ = $(patsubst %.cc, %.o, $(SRC))
-OBJ = $(patsubst %, $(OBJDIR)/%, $(_OBJ))
-
-# Main Rule
-all: $(BIN)
-
-# Rule for BINARY
-$(BIN): $(OBJ)
-	gcc -o $(BIN) $(OBJ) $(CFLAGS) 	
-	ctags -R
-
-# Rule for OBJECT
-$(OBJDIR)/%.o: %.cc $(DEPS) | $(OBJDIR)
-	gcc -c -g $< -o $@ $(LDLIBS)
-
-# Create OBJDIR if not exist
-$(OBJDIR):
-	mkdir $(OBJDIR)
-
-.PHONY: clean
-clean:
-	rm $(OBJ) $(BIN)
-
-.PHONY: print
-print:
-	@echo src: $(SRC)
-	@echo obj: $(OBJ)
-	@echo dep: $(DEP)
-	@echo bin: $(BIN)
+$(PROJECT).elf: $(SRC)
