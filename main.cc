@@ -12,6 +12,7 @@
 int main()
 {
   FILE **fl;
+  uint32_t ctr = 0;
 
   // Allocate pointer to pointer of file
   fl = (FILE**)malloc(sizeof(FILE*));
@@ -24,7 +25,10 @@ int main()
   // Read stream
   while (1)
   {
+    printf("%lu; ", ctr);
     input_read(*fl);
+
+    ctr++;
   }
 
   // Close stream

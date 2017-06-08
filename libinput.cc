@@ -1,13 +1,32 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#include <linux/input.h>
+//#include <linux/input.h>
 
 #include "libinput.h"
 
 #define EVENT_PATH "/dev/input/event0"
 
 #define MAX_PATH 50
+
+#define __time_t int32_t
+#define __suseconds_t int32_t
+
+struct timeval
+{
+  __time_t tv_sec;
+  __suseconds_t tv_usec;
+};
+
+struct input_event
+{
+  struct timeval time; 
+
+  uint16_t type;
+  uint16_t code;
+  int32_t value;
+};
+
 
 /**
  * @brief Open file stream
@@ -47,14 +66,13 @@ int16_t input_close(FILE* fl)
  */
 int16_t input_read(FILE* fl)
 {
-  char data;
+  struct input_event ev;
 
-  fread(&data, sizeof(data), 1, fl);
+  fread(&ev, sizeof(ev), 1, fl);
 
-  printf("data = %X\n", data);
-
-  //printf("time %u; type =  %X; code = %X; value = %X\n",
-  //    ev.time, ev.type, ev.code, ev.value);
+  printf("size = %lu; ", sizeof(ev.time));
+  printf("type =  %X; code = %X; value = %lu\n",
+      ev.type, ev.code, ev.value);
 
   return 0;
 }
