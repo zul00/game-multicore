@@ -48,7 +48,7 @@ void *poll_input(void *arg)
   // Close stream
   input_close(*fl);
 
-  return 0;
+  return NULL;
 }
 
 void *display(void *arg)
@@ -64,10 +64,10 @@ void *display(void *arg)
     input = rd_input->front();
     rd_input->pop();
 
-    printf("%u; ", input);
+    printf("CTR=%u\n ", input);
   }
 
-  return 0;
+  return NULL;
 }
 
 int main()
@@ -78,20 +78,27 @@ int main()
 
   /* Initialize */
   // Prepare FIFO
-  CFifoPtr<uint16_t> ff_input = CFifo<uint16_t>::Create(1, wr_input, 2, rd_input, 2);
+  CFifoPtr<uint16_t> ff_input = CFifo<uint16_t>::Create(1, wr_input, 2, rd_input, 10);
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
   if(int e=CreateProcess(pid[0], poll_input, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 1))
     ERREXIT2("Process creation failed: %i", e);
+  if(int e=CreateProcess(pid[1], display, NULL, PROC_DEFAULT_TIMESLICE,
+        PROC_DEFAULT_STACK, 2))
+    ERREXIT2("Process creation failed: %i", e);
 
   // Set Process Flag
   if(int e=SetProcessFlags(pid[0], PROC_FLAG_JOINABLE, 1))
     ERREXIT2("While setting process flags: %i", e);
+  if(int e=SetProcessFlags(pid[1], PROC_FLAG_JOINABLE, 2))
+    ERREXIT2("While setting process flags: %i", e);
 
   // Start process
   if(int e=StartProcess(pid[0], 1)) 
+    ERREXIT2("Could not start process: %i", e);
+  if(int e=StartProcess(pid[1], 2)) 
     ERREXIT2("Could not start process: %i", e);
 
   if(int e=WaitProcess(pid[0], NULL, 1)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[0], 1, e);
