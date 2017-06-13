@@ -15,24 +15,53 @@
 #define ERREXIT(str) {fprintf(stderr, "Error: " str "\n"); exit(1);}
 #define ERREXIT2(str, ...) {fprintf(stderr, "Error: " str "\n", __VA_ARGS__); exit(1);}
 
+#define N_CORE 2
+
 
 CFifo<uint16_t,CFifo<>::w> *wr_input;
 CFifo<uint16_t,CFifo<>::r> *rd_input;
 
 void *poll_input(void *arg)
 {
+  uint16_t ctr = 0;
+
   /* Initialize */
   // Allocate pointer to pointer of file
   fl = (FILE**)malloc(sizeof(FILE*));
   // Open stream
   input_open(fl);
 
+  // Check FIFO
+  wr_input->validate();
+
   for (;;)
   {
     printf("%lu; ", ctr);
     input_read(*fl);
 
+    wr_input->push(ctr);
+
     ctr++;
+  }
+
+  // Close stream
+  input_close(*fl);
+}
+
+void *display(void *arg)
+{
+  uint16_t input = 0;
+
+  /* Initialize */
+  // Check FIFO
+  rd_input->validate();
+
+  for (;;)
+  {
+    input = rd_input->front();
+    rd_input->pop();
+
+    printf("%lu; ", input);
   }
 
   // Close stream
@@ -42,7 +71,6 @@ void *poll_input(void *arg)
 int main()
 {
   pid_t pid[N_CORE];
-  FILE **fl;
   uint32_t ctr = 0;
 
   printf("Hello Game!!!\n");
