@@ -7,6 +7,10 @@ SRC=$(wildcard *.cc)
 .DEFAULT_GOAL: all
 
 all: $(PROJECT).nc $(PROJECT).xmd
+	ctags -R ./*
+
+.PHONY: prog
+prog: 
 	./$(PROJECT).nc
 
 $(PROJECT).elf: $(SRC)

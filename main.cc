@@ -24,7 +24,7 @@ CFifo<uint16_t,CFifo<>::r> *rd_input;
 void *poll_input(void *arg)
 {
   FILE **fl;
-  uint16_t ctr = 0;
+  struct input_event inp;
 
   /* Initialize */
   // Allocate pointer to pointer of file
@@ -37,12 +37,16 @@ void *poll_input(void *arg)
 
   for (;;)
   {
-    printf("%u; ", ctr);
-    input_read(*fl);
+    inp = input_read(*fl);
 
-    wr_input->push(ctr);
+    printf("size = %lu; ", sizeof(inp.time));
+    printf("type =  %X; code = %X; value = %lu\n",
+        inp.type, inp.code, inp.value);
 
-    ctr++;
+    if (inp.type == 1)
+    {
+      wr_input->push(inp.code);
+    }
   }
 
   // Close stream
@@ -64,7 +68,7 @@ void *display(void *arg)
     input = rd_input->front();
     rd_input->pop();
 
-    printf("CTR=%u\n ", input);
+    printf("INP=%X\n ", input);
   }
 
   return NULL;
@@ -102,6 +106,7 @@ int main()
     ERREXIT2("Could not start process: %i", e);
 
   if(int e=WaitProcess(pid[0], NULL, 1)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[0], 1, e);
+  if(int e=WaitProcess(pid[1], NULL, 2)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[1], 2, e);
 
   printf("Game Over\n");
 
