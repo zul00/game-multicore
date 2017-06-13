@@ -23,6 +23,7 @@ CFifo<uint16_t,CFifo<>::r> *rd_input;
 
 void *poll_input(void *arg)
 {
+  FILE **fl;
   uint16_t ctr = 0;
 
   /* Initialize */
@@ -36,7 +37,7 @@ void *poll_input(void *arg)
 
   for (;;)
   {
-    printf("%lu; ", ctr);
+    printf("%u; ", ctr);
     input_read(*fl);
 
     wr_input->push(ctr);
@@ -46,6 +47,8 @@ void *poll_input(void *arg)
 
   // Close stream
   input_close(*fl);
+
+  return 0;
 }
 
 void *display(void *arg)
@@ -61,24 +64,22 @@ void *display(void *arg)
     input = rd_input->front();
     rd_input->pop();
 
-    printf("%lu; ", input);
+    printf("%u; ", input);
   }
 
-  // Close stream
-  input_close(*fl);
+  return 0;
 }
 
 int main()
 {
   pid_t pid[N_CORE];
-  uint32_t ctr = 0;
 
   printf("Hello Game!!!\n");
 
   /* Initialize */
   // Prepare FIFO
   CFifoPtr<uint16_t> ff_input = CFifo<uint16_t>::Create(1, wr_input, 2, rd_input, 2);
-  if(!fifo_input.valid()) ERREXIT("Error creating buffer");
+  if(!ff_input.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
   if(int e=CreateProcess(pid[0], poll_input, NULL, PROC_DEFAULT_TIMESLICE,
