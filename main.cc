@@ -21,36 +21,39 @@
 CFifo<uint16_t,CFifo<>::w> *wr_input;
 CFifo<uint16_t,CFifo<>::r> *rd_input;
 
+enum btn_stat_t
+{
+  BTN0 = 0,
+  BTN1,
+  BTN2,
+  BTN3,
+  BTN4
+};
+
 void *poll_input(void *arg)
 {
-  FILE **fl;
-  struct input_event inp;
+  int16_t state = 0;
+  uint8_t idx = 0;
 
-  /* Initialize */
-  // Allocate pointer to pointer of file
-  fl = (FILE**)malloc(sizeof(FILE*));
-  // Open stream
-  input_open(fl);
+  printf("Hello Poll!!!\n");
 
-  // Check FIFO
-  wr_input->validate();
-
-  for (;;)
+  while(1)
   {
-    inp = input_read(*fl);
+    // Get state
+    state = buttons_state();
+    printf("Event = 0x%02X\n", state);
 
-    printf("size = %lu; ", sizeof(inp.time));
-    printf("type =  %X; code = %X; value = %lu\n",
-        inp.type, inp.code, inp.value);
-
-    if (inp.type == 1)
+    // Parse state
+    for (idx=0; idx<5; idx++)
     {
-      wr_input->push(inp.code);
+      if (state & (1 << idx))
+      {
+        printf("Button %u pressed\n", idx);
+      }
     }
-  }
 
-  // Close stream
-  input_close(*fl);
+    usleep(50000);
+  }
 
   return NULL;
 }
@@ -76,120 +79,35 @@ void *display(void *arg)
 
 int main()
 {
-  //pid_t pid[N_CORE];
-  int16_t event = 0;
+  pid_t pid[N_CORE];
 
   printf("Hello Game!!!\n");
 
   /* Initialize */
-  
+  CFifoPtr<uint16_t> ff_input = CFifo<uint16_t>::Create(1, wr_input, 2, rd_input, 10);
+  if(!ff_input.valid()) ERREXIT("Error creating buffer");
 
-
-  while(1)
-  {
-    event = buttons_event();
-
-    printf("Event = 0x%02X\n", event);
-
-    switch(event)
-    {
-      case 1:
-        if (button_pressed(0) == true)
-          printf("Button 1 Pressed\n");
-        else if (button_released(0) == true)
-          printf("Button 1 Released\n");
-        else
-          printf("No event on 1\n");
-
-        break;
-
-      case 2:
-        if (button_pressed(1) == true)
-          printf("Button 2 Pressed\n");
-        else if (button_released(1) == true)
-          printf("Button 2 Released\n");
-        else
-          printf("No event on 2\n");
-
-        break;
-
-      case 4:
-        if (button_pressed(2) == true)
-          printf("Button 4 Pressed\n");
-        else if (button_released(2) == true)
-          printf("Button 4 Released\n");
-        else
-          printf("No event on 4\n");
-
-        break;
-
-      case 8:
-        if (button_pressed(3) == true)
-          printf("Button 8 Pressed\n");
-        else if (button_released(3) == true)
-          printf("Button 8 Released\n");
-        else
-          printf("No event on 8\n");
-
-        break;
-
-      case 16:
-        if (button_pressed(4) == true)
-          printf("Button 16 Pressed\n");
-        else if (button_released(4) == true)
-          printf("Button 16 Released\n");
-        else
-          printf("No event on 16\n");
-
-        break;
-
-      default:
-        printf("Unknown event\n");
-        break;
-    };
-
-//    switch(event) {
-//      case 1:
-//
-//      case 2:
-//      case 4:
-//    }
-
-
-
-    //printf("Buttons = 0x%02X; event = 0x%02X\n", stat, event);
-
-    usleep(500000);
-  }
-  
-  
-  
-  
-  
-//  CFifoPtr<uint16_t> ff_input = CFifo<uint16_t>::Create(1, wr_input, 2, rd_input, 10);
-//  if(!ff_input.valid()) ERREXIT("Error creating buffer");
-//
-//  // Create Process
-//  if(int e=CreateProcess(pid[0], poll_input, NULL, PROC_DEFAULT_TIMESLICE,
-//        PROC_DEFAULT_STACK, 1))
-//    ERREXIT2("Process creation failed: %i", e);
+  // Create Process
+  if(int e=CreateProcess(pid[0], poll_input, NULL, PROC_DEFAULT_TIMESLICE,
+        PROC_DEFAULT_STACK, 1))
+    ERREXIT2("Process creation failed: %i", e);
 //  if(int e=CreateProcess(pid[1], display, NULL, PROC_DEFAULT_TIMESLICE,
 //        PROC_DEFAULT_STACK, 2))
 //    ERREXIT2("Process creation failed: %i", e);
-//
-//  // Set Process Flag
-//  if(int e=SetProcessFlags(pid[0], PROC_FLAG_JOINABLE, 1))
-//    ERREXIT2("While setting process flags: %i", e);
+
+  // Set Process Flag
+  if(int e=SetProcessFlags(pid[0], PROC_FLAG_JOINABLE, 1))
+    ERREXIT2("While setting process flags: %i", e);
 //  if(int e=SetProcessFlags(pid[1], PROC_FLAG_JOINABLE, 2))
 //    ERREXIT2("While setting process flags: %i", e);
-//
-//  // Start process
-//  if(int e=StartProcess(pid[0], 1)) 
-//    ERREXIT2("Could not start process: %i", e);
+
+  // Start process
+  if(int e=StartProcess(pid[0], 1)) 
+    ERREXIT2("Could not start process: %i", e);
 //  if(int e=StartProcess(pid[1], 2)) 
 //    ERREXIT2("Could not start process: %i", e);
-//
-//  if(int e=WaitProcess(pid[0], NULL, 1)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[0], 1, e);
+
+  if(int e=WaitProcess(pid[0], NULL, 1)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[0], 1, e);
 //  if(int e=WaitProcess(pid[1], NULL, 2)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[1], 2, e);
 
   printf("Game Over\n");
