@@ -77,7 +77,7 @@ void *display(void *arg)
 int main()
 {
   //pid_t pid[N_CORE];
-  int16_t stat = 0;
+  int16_t event = 0;
 
   printf("Hello Game!!!\n");
 
@@ -87,9 +87,77 @@ int main()
 
   while(1)
   {
-    stat = buttons_state();
+    event = buttons_event();
 
-    printf("Buttons = %X\n", stat);
+    printf("Event = 0x%02X\n", event);
+
+    switch(event)
+    {
+      case 1:
+        if (button_pressed(0) == true)
+          printf("Button 1 Pressed\n");
+        else if (button_released(0) == true)
+          printf("Button 1 Released\n");
+        else
+          printf("No event on 1\n");
+
+        break;
+
+      case 2:
+        if (button_pressed(1) == true)
+          printf("Button 2 Pressed\n");
+        else if (button_released(1) == true)
+          printf("Button 2 Released\n");
+        else
+          printf("No event on 2\n");
+
+        break;
+
+      case 4:
+        if (button_pressed(2) == true)
+          printf("Button 4 Pressed\n");
+        else if (button_released(2) == true)
+          printf("Button 4 Released\n");
+        else
+          printf("No event on 4\n");
+
+        break;
+
+      case 8:
+        if (button_pressed(3) == true)
+          printf("Button 8 Pressed\n");
+        else if (button_released(3) == true)
+          printf("Button 8 Released\n");
+        else
+          printf("No event on 8\n");
+
+        break;
+
+      case 16:
+        if (button_pressed(4) == true)
+          printf("Button 16 Pressed\n");
+        else if (button_released(4) == true)
+          printf("Button 16 Released\n");
+        else
+          printf("No event on 16\n");
+
+        break;
+
+      default:
+        printf("Unknown event\n");
+        break;
+    };
+
+//    switch(event) {
+//      case 1:
+//
+//      case 2:
+//      case 4:
+//    }
+
+
+
+    //printf("Buttons = 0x%02X; event = 0x%02X\n", stat, event);
 
     usleep(500000);
   }
