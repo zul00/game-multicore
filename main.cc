@@ -63,6 +63,12 @@ typedef struct
   int16_t health;
 } player_param_t;
 
+typedef struct
+{
+  pos_rect_t pos_rect;
+  bool alive;
+} bullet_param_t;
+
 CFifo<btn_event,CFifo<>::w> *wr_btn;
 CFifo<btn_event,CFifo<>::r> *rd_btn;
 
@@ -142,6 +148,7 @@ void *prc_player_alg(void *arg)
     if (input != BTN_NO_EVENT)
     {
       // Player Algorithm
+      // Update position
       switch(input)
       {
         case BTN_LEFT:
