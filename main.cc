@@ -76,8 +76,8 @@ CFifo<player_param_t,CFifo<>::r> *rd_player;
 void draw_player(player_param_t param)
 {
   fillrect(
-      param.pos_rect.pos.x,              BOTTOM_POS, 
-      param.pos_rect.pos.x+PLAYER_WIDTH, BOTTOM_POS-PLAYER_HEIGHT,
+      param.pos_rect.pos.x,                       param.pos_rect.pos.y, 
+      param.pos_rect.pos.x+param.pos_rect.size.x, param.pos_rect.pos.y-param.pos_rect.size.y,
       black);
 }
 
