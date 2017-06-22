@@ -20,7 +20,7 @@
 /* Render config */
 #define BOTTOM_POS      DVI_HEIGHT-20
 
-#define PLAYER_HEIGTH   20
+#define PLAYER_HEIGHT   20
 #define PLAYER_WIDTH    50
 
 /* Control Config */
@@ -51,9 +51,15 @@ char const *btn_name[] =
   "NO_EVENT"
 };
 
-struct player_param
+typedef struct
 {
-  coord_t pos;
+  coordinate_t pos;
+  coordinate_t size;
+} pos_rect_t;
+
+typedef struct
+{
+  pos_rect_t pos_rect;
   int16_t health;
 } player_param_t;
 
@@ -61,17 +67,17 @@ CFifo<btn_event,CFifo<>::w> *wr_btn;
 CFifo<btn_event,CFifo<>::r> *rd_btn;
 
 
-CFifo<struct player_param,CFifo<>::w> *wr_player;
-CFifo<struct player_param,CFifo<>::r> *rd_player;
+CFifo<player_param_t,CFifo<>::w> *wr_player;
+CFifo<player_param_t,CFifo<>::r> *rd_player;
 
 /**
  * @brief Draw player
  */
-void draw_player(struct player_param param)
+void draw_player(player_param_t param)
 {
   fillrect(
-      param.pos,              BOTTOM_POS, 
-      param.pos+PLAYER_WIDTH, BOTTOM_POS-PLAYER_HEIGTH,
+      param.pos_rect.pos.x,              BOTTOM_POS, 
+      param.pos_rect.pos.x+PLAYER_WIDTH, BOTTOM_POS-PLAYER_HEIGHT,
       black);
 }
 
@@ -114,7 +120,7 @@ void *prc_input(void *arg)
 void *prc_player_alg(void *arg)
 {
   uint16_t input = 0;
-  struct player_param param = {INIT_POS,0};
+  player_param_t param;
 
   printf("Hello Player Alg!!!\n");
 
@@ -122,6 +128,11 @@ void *prc_player_alg(void *arg)
   // Check FIFO
   rd_btn->validate();
   wr_player->validate();
+  // Initialize player
+  param.pos_rect.pos.x = INIT_POS;
+  param.pos_rect.pos.y = BOTTOM_POS;
+  param.pos_rect.size.x = PLAYER_WIDTH;
+  param.pos_rect.size.y = PLAYER_HEIGHT;
 
   for (;;)
   {
@@ -134,15 +145,15 @@ void *prc_player_alg(void *arg)
       switch(input)
       {
         case BTN_LEFT:
-          if (param.pos > MIN_POS)
+          if (param.pos_rect.pos.x > MIN_POS)
           {
-            param.pos -= INC_POS;
+            param.pos_rect.pos.x -= INC_POS;
           }
           break;
         case BTN_RIGHT:
-          if (param.pos < MAX_POS)
+          if (param.pos_rect.pos.x < MAX_POS)
           {
-            param.pos += INC_POS;
+            param.pos_rect.pos.x += INC_POS;
           }
           break;
         default:
@@ -152,7 +163,7 @@ void *prc_player_alg(void *arg)
       param.health  = 100;
       
       printf("button pressed = %s\n ", btn_name[input]);
-      wr_player->push((struct player_param) param);
+      wr_player->push((player_param_t) param);
     }
   }
 
@@ -164,7 +175,7 @@ void *prc_player_alg(void *arg)
  */
 void *prc_display(void *arg)
 {
-  struct player_param input = {DVI_WIDTH,0};
+  player_param_t input;
 
   printf("Hello Display!!!\n");
 
@@ -187,8 +198,9 @@ void *prc_display(void *arg)
 
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
     draw_player(input);
+    drawstring(20, 20, "Space Invader", black, -1, -1);   
     render_flip_buffer();
-    printf("Render this -> pos = %d, health = %d\n", input.pos, input.health);
+    printf("Render this -> pos = %d, health = %d\n", input.pos_rect.pos.x, input.health);
   }
 
   return NULL;
@@ -203,7 +215,7 @@ int main()
   /* Initialize */
   CFifoPtr<btn_event> ff_input = CFifo<btn_event>::Create(1, wr_btn, 2, rd_btn, 10);
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
-  CFifoPtr<struct player_param> ff_player = CFifo<struct player_param>::Create(2, wr_player, 3, rd_player, 2);
+  CFifoPtr<player_param_t> ff_player = CFifo<player_param_t>::Create(2, wr_player, 3, rd_player, 2);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
