@@ -107,10 +107,21 @@ void *prc_player_alg(void *arg)
     if (input != BTN_NO_EVENT)
     {
       // Player Algorithm
-      param.pos     = (coord_t)input;
+      switch(input)
+      {
+        case BTN_LEFT:
+          param.pos -= 1;
+          break;
+        case BTN_RIGHT:
+          param.pos += 1;
+          break;
+        default:
+          break;
+      }
+
       param.health  = 100;
       
-      printf("button %u pressed = %s\n ", input, btn_name[input]);
+      printf("button pressed = %s\n ", btn_name[input]);
       wr_player->push((struct player_param) param);
     }
   }
