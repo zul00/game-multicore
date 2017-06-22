@@ -17,6 +17,19 @@
 
 #define N_CORE 3
 
+/* Render config */
+#define BOTTOM_POS      DVI_HEIGHT-20
+
+#define PLAYER_HEIGTH   20
+#define PLAYER_WIDTH    50
+
+/* Control Config */
+#define INC_POS   20
+#define INIT_POS  DVI_WIDTH/2
+
+/* Position Limit */
+#define MAX_POS   DVI_WIDTH - PLAYER_WIDTH
+#define MIN_POS   0
 
 enum btn_event
 {
@@ -50,6 +63,17 @@ CFifo<btn_event,CFifo<>::r> *rd_btn;
 
 CFifo<struct player_param,CFifo<>::w> *wr_player;
 CFifo<struct player_param,CFifo<>::r> *rd_player;
+
+/**
+ * @brief Draw player
+ */
+void draw_player(struct player_param param)
+{
+  fillrect(
+      param.pos,              BOTTOM_POS, 
+      param.pos+PLAYER_WIDTH, BOTTOM_POS-PLAYER_HEIGTH,
+      black);
+}
 
 /**
  * @brief Process to handle input
@@ -90,7 +114,7 @@ void *prc_input(void *arg)
 void *prc_player_alg(void *arg)
 {
   uint16_t input = 0;
-  struct player_param param = {0,0};
+  struct player_param param = {INIT_POS,0};
 
   printf("Hello Player Alg!!!\n");
 
@@ -110,10 +134,16 @@ void *prc_player_alg(void *arg)
       switch(input)
       {
         case BTN_LEFT:
-          param.pos -= 1;
+          if (param.pos > MIN_POS)
+          {
+            param.pos -= INC_POS;
+          }
           break;
         case BTN_RIGHT:
-          param.pos += 1;
+          if (param.pos < MAX_POS)
+          {
+            param.pos += INC_POS;
+          }
           break;
         default:
           break;
@@ -134,22 +164,31 @@ void *prc_player_alg(void *arg)
  */
 void *prc_display(void *arg)
 {
-  struct player_param input = {0,0};
+  struct player_param input = {DVI_WIDTH,0};
 
   printf("Hello Display!!!\n");
 
   /* Initialize */
+  // Init Render
+  render_init(1);
+
   // Check FIFO
   rd_player->validate();
+
+  // Reset screen
+  fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
+  draw_player(input);
+  render_flip_buffer();
 
   for (;;)
   {
     input = rd_player->front();
     rd_player->pop();
 
-
+    fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
+    draw_player(input);
+    render_flip_buffer();
     printf("Render this -> pos = %d, health = %d\n", input.pos, input.health);
-
   }
 
   return NULL;
