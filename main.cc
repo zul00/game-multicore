@@ -20,19 +20,33 @@
 
 enum btn_event
 {
-  BTN0 = 0,
-  BTN1,
-  BTN2,
-  BTN3,
-  BTN4,
+  BTN_ENTER = 0,
+  BTN_RIGHT,
+  BTN_DOWN,
+  BTN_LEFT,
+  BTN_UP,
   BTN_NO_EVENT
+};
+
+char const *btn_name[] =
+{
+  "ENTER",
+  "RIGHT",
+  "DOWN",
+  "LEFT",
+  "UP",
+  "NO_EVENT"
 };
 
 CFifo<btn_event,CFifo<>::w> *wr_btn;
 CFifo<btn_event,CFifo<>::r> *rd_btn;
 
 
-void *poll_input(void *arg)
+/**
+ * @brief Process to handle input
+ *
+ */
+void *prc_input(void *arg)
 {
   int16_t state = 0;
   uint8_t idx = 0;
@@ -61,7 +75,10 @@ void *poll_input(void *arg)
   return NULL;
 }
 
-void *display(void *arg)
+/**
+ * @brief Process to handle player algorithm
+ */
+void *prc_player_alg(void *arg)
 {
   uint16_t input = 0;
 
@@ -76,7 +93,7 @@ void *display(void *arg)
 
     if (input != BTN_NO_EVENT)
     {
-      printf("button %u pressed\n ", input);
+      printf("button %u pressed = %s\n ", input, btn_name[input]);
     }
   }
 
@@ -94,10 +111,10 @@ int main()
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
-  if(int e=CreateProcess(pid[0], poll_input, NULL, PROC_DEFAULT_TIMESLICE,
+  if(int e=CreateProcess(pid[0], prc_input, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 1))
     ERREXIT2("Process creation failed: %i", e);
-  if(int e=CreateProcess(pid[1], display, NULL, PROC_DEFAULT_TIMESLICE,
+  if(int e=CreateProcess(pid[1], prc_player_alg, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 2))
     ERREXIT2("Process creation failed: %i", e);
 
