@@ -27,6 +27,8 @@
 #define INC_POS   20
 #define INIT_POS  DVI_WIDTH/2
 
+#define P_BULLETS 1
+
 /* Position Limit */
 #define MAX_POS   DVI_WIDTH - PLAYER_WIDTH
 #define MIN_POS   0
@@ -85,6 +87,48 @@ void draw_player(player_param_t param)
       param.pos_rect.pos.x,                       param.pos_rect.pos.y, 
       param.pos_rect.pos.x+param.pos_rect.size.x, param.pos_rect.pos.y-param.pos_rect.size.y,
       black);
+}
+
+/**
+ * @brief Player shoot
+ */
+void player_shoot(bullet_param_t *bullet, player_param_t *player)
+{
+  if (bullet->alive == 0) 
+  {                                                
+    //count number of shots fired                                             
+    //score.shots++;                                                            
+
+    bullet->pos_rect.pos.x = player->pos_rect.pos.x + (PLAYER_WIDTH / 2);                    
+    //-5 at the end so the bullets ends closer to the top of the screen due to 30px speed
+    bullet->pos_rect.pos.y = player->pos_rect.pos.y - (bullet->pos_rect.size.y + 10);       
+    bullet->alive = 1;                                                     
+  }                                                                           
+}
+
+/**
+ * @brief Move bullet
+ */
+int move_bullets(bullet_param_t *bullet, int max, int speed) 
+{                     
+  if (bullet->alive == 1) 
+  {                                                      
+    bullet->pos_rect.pos.y += speed;
+
+    // Bullet out of area BOTTOM
+    if (bullet->pos_rect.pos.y <= 0) 
+    {                                                 
+      bullet->alive = 0;
+    }                                                                         
+
+    // Bullet out of area TOP
+    if (bullet->pos_rect.pos.y + bullet->pos_rect.size.y >= DVI_HEIGHT) 
+    {                            
+      bullet->alive = 0;
+    }                                                                         
+  }                                                                             
+
+  return 0;                                                                     
 }
 
 /**
@@ -162,6 +206,9 @@ void *prc_player_alg(void *arg)
           {
             param.pos_rect.pos.x += INC_POS;
           }
+          break;
+        case BTN_ENTER:
+          
           break;
         default:
           break;
