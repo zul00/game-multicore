@@ -114,7 +114,7 @@ void player_shoot(bullet_param_t *bullet, player_param_t *player)
 /**
  * @brief Move bullet
  */
-int move_bullets(bullet_param_t *bullet, int max, int speed) 
+int move_bullets(bullet_param_t *bullet, int speed) 
 {                     
   if (bullet->alive == 1) 
   {                                                      
@@ -211,12 +211,22 @@ void *prc_player_alg(void *arg)
   b.pos_rect.pos.y = BOTTOM_POS;
   b.pos_rect.size.x = BULLET_WIDTH;
   b.pos_rect.size.y = BULLET_HEIGHT;
+  b.alive = 0;
 
   for (;;)
   {
-    input = rd_btn->front();
-    rd_btn->pop();
+    // Read button FIFO if there's data
+    if(rd_btn->count() > 0)
+    {
+      input = rd_btn->front();
+      rd_btn->pop();
+    }
+    else
+    {
+      input = BTN_NO_EVENT;
+    }
 
+    // Handle button FIFO
     if (input != BTN_NO_EVENT)
     {
       // Player Algorithm
@@ -243,11 +253,18 @@ void *prc_player_alg(void *arg)
           break;
       }
 
+      // Update other things
+      printf("Here\n");
+      move_bullets(&b, -5);
+      printf("Or Here\n");
+
       param.health  = 100;
-      
-      printf("button pressed = %s\n ", btn_name[input]);
+
+      //printf("button pressed = %s\n ", btn_name[input]);
       wr_player->push((player_param_t) param);
       wr_bullet->push((bullet_param_t) b);
+
+      usleep(33000);
     }
   }
 
