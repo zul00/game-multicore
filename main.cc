@@ -15,7 +15,7 @@
 #define ERREXIT(str) {fprintf(stderr, "Error: " str "\n"); exit(1);}
 #define ERREXIT2(str, ...) {fprintf(stderr, "Error: " str "\n", __VA_ARGS__); exit(1);}
 
-#define N_CORE 3
+#define N_CORE 4
 
 /* Render config */
 #define BOTTOM_POS      DVI_HEIGHT-20
@@ -23,7 +23,7 @@
 #define PLAYER_HEIGHT   20
 #define PLAYER_WIDTH    50
 
-#define BULLET_HEIGHT   5 
+#define BULLET_HEIGHT   10 
 #define BULLET_WIDTH    5
 
 /* Control Config */
@@ -82,6 +82,9 @@ CFifo<player_param_t,CFifo<>::r> *rd_player;
 
 CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
+
+CFifo<bullet_param_t,CFifo<>::w> *wr_bullet2;
+CFifo<bullet_param_t,CFifo<>::r> *rd_bullet2;
 
 /**
  * @brief Draw player
@@ -252,20 +255,50 @@ void *prc_player_alg(void *arg)
         default:
           break;
       }
-
-      // Update other things
-      printf("Here\n");
-      move_bullets(&b, -5);
-      printf("Or Here\n");
-
       param.health  = 100;
 
-      //printf("button pressed = %s\n ", btn_name[input]);
+      printf("button pressed = %s\n ", btn_name[input]);
       wr_player->push((player_param_t) param);
-      wr_bullet->push((bullet_param_t) b);
-
-      usleep(33000);
     }
+
+    // Update other things
+    move_bullets(&b, -15);
+    wr_bullet->push((bullet_param_t) b);
+    usleep(50000);
+  }
+
+  return NULL;
+}
+
+/**
+ * @brief Process to render display
+ */
+void *prc_update_pos(void *arg)
+{
+  //bullet_param_t b_pos;
+
+  printf("Hello Update Pos!!!\n");
+
+  /* Initialize */
+
+//  rd_bullet->validate();
+//  wr_bullet2->validate();
+
+  for (;;)
+  {
+//    if(rd_bullet->count() > 0)
+//    {
+//      b_pos = rd_bullet->front();
+//      rd_bullet->pop();
+//    }
+//
+//    printf("bullet_y0 = %d\n", b_pos.pos_rect.pos.y);
+//    move_bullets(&b_pos, -5);
+//    printf("bullet_y1 = %d\n", b_pos.pos_rect.pos.y);
+//
+//    wr_bullet2->push((bullet_param_t) b_pos);
+//
+    usleep(33000);
   }
 
   return NULL;
@@ -296,17 +329,25 @@ void *prc_display(void *arg)
 
   for (;;)
   {
-    input  = rd_player->front();
-    b_draw = rd_bullet->front();
-    rd_player->pop();
-    rd_bullet->pop();
+    if (rd_player->count())
+    {
+      input  = rd_player->front();
+      rd_player->pop();
+    }
+
+    if (rd_bullet->count())
+    {
+      b_draw = rd_bullet->front();
+      rd_bullet->pop();
+    }
+    printf("count bullet = %d\n", rd_bullet->count());
 
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
     draw_player(input);
     draw_bullets(b_draw);
     drawstring(20, 20, "Space Invader", black, -1, -1);   
     render_flip_buffer();
-    printf("Render this -> pos = %d, health = %d\n", input.pos_rect.pos.x, input.health);
+    usleep(3300);
   }
 
   return NULL;
@@ -321,10 +362,12 @@ int main()
   /* Initialize */
   CFifoPtr<btn_event> ff_input = CFifo<btn_event>::Create(1, wr_btn, 2, rd_btn, 10);
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
-  CFifoPtr<player_param_t> ff_player = CFifo<player_param_t>::Create(2, wr_player, 3, rd_player, 2);
+  CFifoPtr<player_param_t> ff_player = CFifo<player_param_t>::Create(2, wr_player, 3, rd_player, 10);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
-  CFifoPtr<bullet_param_t> ff_bullet = CFifo<bullet_param_t>::Create(2, wr_bullet, 3, rd_bullet, 2);
+  CFifoPtr<bullet_param_t> ff_bullet = CFifo<bullet_param_t>::Create(2, wr_bullet, 3, rd_bullet, 10);
   if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
+//  CFifoPtr<bullet_param_t> ff_bullet2 = CFifo<bullet_param_t>::Create(4, wr_bullet2, 3, rd_bullet2, 2);
+//  if(!ff_bullet2.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
   if(int e=CreateProcess(pid[0], prc_input, NULL, PROC_DEFAULT_TIMESLICE,
@@ -336,6 +379,9 @@ int main()
   if(int e=CreateProcess(pid[2], prc_display, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 3))
     ERREXIT2("Process creation failed: %i", e);
+  if(int e=CreateProcess(pid[3], prc_update_pos, NULL, PROC_DEFAULT_TIMESLICE,
+        PROC_DEFAULT_STACK, 4))
+    ERREXIT2("Process creation failed: %i", e);
 
   // Set Process Flag
   if(int e=SetProcessFlags(pid[0], PROC_FLAG_JOINABLE, 1))
@@ -343,6 +389,8 @@ int main()
   if(int e=SetProcessFlags(pid[1], PROC_FLAG_JOINABLE, 2))
     ERREXIT2("While setting process flags: %i", e);
   if(int e=SetProcessFlags(pid[2], PROC_FLAG_JOINABLE, 3))
+    ERREXIT2("While setting process flags: %i", e);
+  if(int e=SetProcessFlags(pid[3], PROC_FLAG_JOINABLE, 4))
     ERREXIT2("While setting process flags: %i", e);
 
   // Start process
@@ -352,10 +400,13 @@ int main()
     ERREXIT2("Could not start process: %i", e);
   if(int e=StartProcess(pid[2], 3)) 
     ERREXIT2("Could not start process: %i", e);
+  if(int e=StartProcess(pid[3], 4)) 
+    ERREXIT2("Could not start process: %i", e);
 
   if(int e=WaitProcess(pid[0], NULL, 1)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[0], 1, e);
   if(int e=WaitProcess(pid[1], NULL, 2)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[1], 2, e);
   if(int e=WaitProcess(pid[2], NULL, 3)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[2], 3, e);
+  if(int e=WaitProcess(pid[3], NULL, 4)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[3], 4, e);
 
   printf("Game Over\n");
 
