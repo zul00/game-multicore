@@ -77,9 +77,11 @@ typedef struct
 CFifo<btn_event,CFifo<>::w> *wr_btn;
 CFifo<btn_event,CFifo<>::r> *rd_btn;
 
-
 CFifo<player_param_t,CFifo<>::w> *wr_player;
 CFifo<player_param_t,CFifo<>::r> *rd_player;
+
+CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
+CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
 
 /**
  * @brief Draw player
@@ -137,7 +139,7 @@ int move_bullets(bullet_param_t *bullet, int max, int speed)
 /**
  * @brief Draw bullets
  */
-void draw_bullets(bullet_param_t bullet, int max) 
+void draw_bullets(bullet_param_t bullet) 
 {                               
   if (bullet.alive == 1) 
   {                                                      
@@ -196,6 +198,7 @@ void *prc_player_alg(void *arg)
   // Check FIFO
   rd_btn->validate();
   wr_player->validate();
+  wr_bullet->validate();
 
   // Initialize player
   param.pos_rect.pos.x = INIT_POS;
@@ -206,8 +209,8 @@ void *prc_player_alg(void *arg)
   // Initialize bullet
   b.pos_rect.pos.x = INIT_POS;
   b.pos_rect.pos.y = BOTTOM_POS;
-  b.pos_rect.size.x = PLAYER_WIDTH;
-  b.pos_rect.size.y = PLAYER_HEIGHT;
+  b.pos_rect.size.x = BULLET_WIDTH;
+  b.pos_rect.size.y = BULLET_HEIGHT;
 
   for (;;)
   {
@@ -244,6 +247,7 @@ void *prc_player_alg(void *arg)
       
       printf("button pressed = %s\n ", btn_name[input]);
       wr_player->push((player_param_t) param);
+      wr_bullet->push((bullet_param_t) b);
     }
   }
 
@@ -256,6 +260,7 @@ void *prc_player_alg(void *arg)
 void *prc_display(void *arg)
 {
   player_param_t input;
+  bullet_param_t b_draw;
 
   printf("Hello Display!!!\n");
 
@@ -265,6 +270,7 @@ void *prc_display(void *arg)
 
   // Check FIFO
   rd_player->validate();
+  rd_bullet->validate();
 
   // Reset screen
   fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
@@ -273,11 +279,14 @@ void *prc_display(void *arg)
 
   for (;;)
   {
-    input = rd_player->front();
+    input  = rd_player->front();
+    b_draw = rd_bullet->front();
     rd_player->pop();
+    rd_bullet->pop();
 
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
     draw_player(input);
+    draw_bullets(b_draw);
     drawstring(20, 20, "Space Invader", black, -1, -1);   
     render_flip_buffer();
     printf("Render this -> pos = %d, health = %d\n", input.pos_rect.pos.x, input.health);
@@ -297,6 +306,8 @@ int main()
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
   CFifoPtr<player_param_t> ff_player = CFifo<player_param_t>::Create(2, wr_player, 3, rd_player, 2);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
+  CFifoPtr<bullet_param_t> ff_bullet = CFifo<bullet_param_t>::Create(2, wr_bullet, 3, rd_bullet, 2);
+  if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
   if(int e=CreateProcess(pid[0], prc_input, NULL, PROC_DEFAULT_TIMESLICE,
