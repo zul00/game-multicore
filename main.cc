@@ -23,6 +23,9 @@
 #define PLAYER_HEIGHT   20
 #define PLAYER_WIDTH    50
 
+#define BULLET_HEIGHT   5 
+#define BULLET_WIDTH    5
+
 /* Control Config */
 #define INC_POS   20
 #define INIT_POS  DVI_WIDTH/2
@@ -132,6 +135,20 @@ int move_bullets(bullet_param_t *bullet, int max, int speed)
 }
 
 /**
+ * @brief Draw bullets
+ */
+void draw_bullets(bullet_param_t bullet, int max) 
+{                               
+  if (bullet.alive == 1) 
+  {                                                      
+    fillrect(
+        bullet.pos_rect.pos.x,                       bullet.pos_rect.pos.y, 
+        bullet.pos_rect.pos.x+bullet.pos_rect.size.x, bullet.pos_rect.pos.y-bullet.pos_rect.size.y,
+        red);
+  }                                                                           
+}
+
+/**
  * @brief Process to handle input
  *
  */
@@ -171,6 +188,7 @@ void *prc_player_alg(void *arg)
 {
   uint16_t input = 0;
   player_param_t param;
+  bullet_param_t b;
 
   printf("Hello Player Alg!!!\n");
 
@@ -178,11 +196,18 @@ void *prc_player_alg(void *arg)
   // Check FIFO
   rd_btn->validate();
   wr_player->validate();
+
   // Initialize player
   param.pos_rect.pos.x = INIT_POS;
   param.pos_rect.pos.y = BOTTOM_POS;
   param.pos_rect.size.x = PLAYER_WIDTH;
   param.pos_rect.size.y = PLAYER_HEIGHT;
+
+  // Initialize bullet
+  b.pos_rect.pos.x = INIT_POS;
+  b.pos_rect.pos.y = BOTTOM_POS;
+  b.pos_rect.size.x = PLAYER_WIDTH;
+  b.pos_rect.size.y = PLAYER_HEIGHT;
 
   for (;;)
   {
@@ -208,6 +233,7 @@ void *prc_player_alg(void *arg)
           }
           break;
         case BTN_ENTER:
+          player_shoot(&b, &param);
           
           break;
         default:
