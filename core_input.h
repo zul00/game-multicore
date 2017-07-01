@@ -1,6 +1,9 @@
 #ifndef __CORE_INPUT_H
 #define __CORE_INPUT_H
 
+/* Timing configureation */
+#define BTN_SCAN_PERIOD   50000   // 50 ms
+
 enum btn_event_e
 {
   BTN_ENTER = 0,

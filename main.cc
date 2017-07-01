@@ -17,15 +17,6 @@
 
 #define N_CORE 4
 
-/* Render config */
-#define BOTTOM_POS      DVI_HEIGHT-20
-
-#define PLAYER_HEIGHT   20
-#define PLAYER_WIDTH    50
-
-#define BULLET_HEIGHT   10 
-#define BULLET_WIDTH    5
-
 /* Control Config */
 #define INC_POS   20
 #define INIT_POS  DVI_WIDTH/2
@@ -35,30 +26,6 @@
 /* Position Limit */
 #define MAX_POS   DVI_WIDTH - PLAYER_WIDTH
 #define MIN_POS   0
-
-/* Timing configureation */
-#define BTN_SCAN_PERIOD   50000   // 50 ms
-
-
-
-typedef struct
-{
-  coordinate_t pos;
-  coordinate_t size;
-} pos_rect_t;
-
-typedef struct
-{
-  pos_rect_t pos_rect;
-  int16_t health;
-} player_param_t;
-
-typedef struct
-{
-  pos_rect_t pos_rect;
-  bool alive;
-} bullet_param_t;
-
 
 /* Declare FIFO buffer */
 CFifo<btn_event_e,CFifo<>::w> *wr_btn;
@@ -73,16 +40,6 @@ CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
 CFifo<bullet_param_t,CFifo<>::w> *wr_bullet2;
 CFifo<bullet_param_t,CFifo<>::r> *rd_bullet2;
 
-/**
- * @brief Draw player
- */
-void draw_player(player_param_t param)
-{
-  fillrect(
-      param.pos_rect.pos.x,                       param.pos_rect.pos.y, 
-      param.pos_rect.pos.x+param.pos_rect.size.x, param.pos_rect.pos.y-param.pos_rect.size.y,
-      black);
-}
 
 /**
  * @brief Player shoot
@@ -124,20 +81,6 @@ int move_bullets(bullet_param_t *bullet, int speed)
   }                                                                             
 
   return 0;                                                                     
-}
-
-/**
- * @brief Draw bullets
- */
-void draw_bullets(bullet_param_t bullet) 
-{                               
-  if (bullet.alive == 1) 
-  {                                                      
-    fillrect(
-        bullet.pos_rect.pos.x,                       bullet.pos_rect.pos.y, 
-        bullet.pos_rect.pos.x+bullet.pos_rect.size.x, bullet.pos_rect.pos.y-bullet.pos_rect.size.y,
-        red);
-  }                                                                           
 }
 
 
@@ -226,7 +169,7 @@ void *prc_player_alg(void *arg)
 }
 
 /**
- * @brief Process to render display
+ * @brief Process to update bullet position
  */
 void *prc_update_pos(void *arg)
 {
@@ -259,54 +202,6 @@ void *prc_update_pos(void *arg)
   return NULL;
 }
 
-/**
- * @brief Process to render display
- */
-void *prc_display(void *arg)
-{
-  player_param_t input;
-  bullet_param_t b_draw;
-
-  printf("Hello Display!!!\n");
-
-  /* Initialize */
-  // Init Render
-  render_init(1);
-
-  // Check FIFO
-  rd_player->validate();
-  rd_bullet->validate();
-
-  // Reset screen
-  fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
-  draw_player(input);
-  render_flip_buffer();
-
-  for (;;)
-  {
-    if (rd_player->count())
-    {
-      input  = rd_player->front();
-      rd_player->pop();
-    }
-
-    if (rd_bullet->count())
-    {
-      b_draw = rd_bullet->front();
-      rd_bullet->pop();
-    }
-    printf("count bullet = %d\n", rd_bullet->count());
-
-    fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
-    draw_player(input);
-    draw_bullets(b_draw);
-    drawstring(20, 20, "Space Invader", black, -1, -1);   
-    render_flip_buffer();
-    usleep(3300);
-  }
-
-  return NULL;
-}
 
 int main()
 {
@@ -331,7 +226,7 @@ int main()
   if(int e=CreateProcess(pid[1], prc_player_alg, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 2))
     ERREXIT2("Process creation failed: %i", e);
-  if(int e=CreateProcess(pid[2], prc_display, NULL, PROC_DEFAULT_TIMESLICE,
+  if(int e=CreateProcess(pid[2], core_render, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 3))
     ERREXIT2("Process creation failed: %i", e);
   if(int e=CreateProcess(pid[3], prc_update_pos, NULL, PROC_DEFAULT_TIMESLICE,
