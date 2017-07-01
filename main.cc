@@ -36,6 +36,9 @@
 #define MAX_POS   DVI_WIDTH - PLAYER_WIDTH
 #define MIN_POS   0
 
+/* Timing configureation */
+#define BTN_SCAN_PERIOD   50000   // 50 ms
+
 enum btn_event
 {
   BTN_ENTER = 0,
@@ -159,7 +162,7 @@ void draw_bullets(bullet_param_t bullet)
  */
 void *prc_input(void *arg)
 {
-  int16_t state = 0;
+  int16_t bt_state = 0;
   uint8_t idx = 0;
 
   printf("Hello Poll!!!\n");
@@ -168,19 +171,19 @@ void *prc_input(void *arg)
   wr_btn->validate();
   while(1)
   {
-    // Get state
-    state = buttons_state();
+    // Get buttons state
+    bt_state = buttons_state();
 
-    // Parse state
+    // Scan button state
     for (idx=0; idx<5; idx++)
     {
-      if (state & (1 << idx))
-      {
+      if (bt_state & (1 << idx))
+      { // Push index of active button
         wr_btn->push((btn_event)idx);
       }
     }
 
-    usleep(50000);
+    usleep(BTN_SCAN_PERIOD);
   }
 
   return NULL;
