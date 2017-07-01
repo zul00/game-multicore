@@ -39,25 +39,7 @@
 /* Timing configureation */
 #define BTN_SCAN_PERIOD   50000   // 50 ms
 
-enum btn_event
-{
-  BTN_ENTER = 0,
-  BTN_RIGHT,
-  BTN_DOWN,
-  BTN_LEFT,
-  BTN_UP,
-  BTN_NO_EVENT
-};
 
-char const *btn_name[] =
-{
-  "ENTER",
-  "RIGHT",
-  "DOWN",
-  "LEFT",
-  "UP",
-  "NO_EVENT"
-};
 
 typedef struct
 {
@@ -77,8 +59,10 @@ typedef struct
   bool alive;
 } bullet_param_t;
 
-CFifo<btn_event,CFifo<>::w> *wr_btn;
-CFifo<btn_event,CFifo<>::r> *rd_btn;
+
+/* Declare FIFO buffer */
+CFifo<btn_event_e,CFifo<>::w> *wr_btn;
+CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 
 CFifo<player_param_t,CFifo<>::w> *wr_player;
 CFifo<player_param_t,CFifo<>::r> *rd_player;
@@ -156,38 +140,6 @@ void draw_bullets(bullet_param_t bullet)
   }                                                                           
 }
 
-/**
- * @brief Process to handle input
- *
- */
-void *prc_input(void *arg)
-{
-  int16_t bt_state = 0;
-  uint8_t idx = 0;
-
-  printf("Hello Poll!!!\n");
-
-  // Check FIFO
-  wr_btn->validate();
-  while(1)
-  {
-    // Get buttons state
-    bt_state = buttons_state();
-
-    // Scan button state
-    for (idx=0; idx<5; idx++)
-    {
-      if (bt_state & (1 << idx))
-      { // Push index of active button
-        wr_btn->push((btn_event)idx);
-      }
-    }
-
-    usleep(BTN_SCAN_PERIOD);
-  }
-
-  return NULL;
-}
 
 /**
  * @brief Process to handle player algorithm
@@ -260,7 +212,7 @@ void *prc_player_alg(void *arg)
       }
       param.health  = 100;
 
-      printf("button pressed = %s\n ", btn_name[input]);
+      printf("button pressed = %s\n ", btn_string[input]);
       wr_player->push((player_param_t) param);
     }
 
@@ -363,7 +315,7 @@ int main()
   printf("Hello Game!!!\n");
 
   /* Initialize */
-  CFifoPtr<btn_event> ff_input = CFifo<btn_event>::Create(1, wr_btn, 2, rd_btn, 10);
+  CFifoPtr<btn_event_e> ff_input = CFifo<btn_event_e>::Create(1, wr_btn, 2, rd_btn, 10);
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
   CFifoPtr<player_param_t> ff_player = CFifo<player_param_t>::Create(2, wr_player, 3, rd_player, 10);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
@@ -373,7 +325,7 @@ int main()
 //  if(!ff_bullet2.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
-  if(int e=CreateProcess(pid[0], prc_input, NULL, PROC_DEFAULT_TIMESLICE,
+  if(int e=CreateProcess(pid[0], core_input, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 1))
     ERREXIT2("Process creation failed: %i", e);
   if(int e=CreateProcess(pid[1], prc_player_alg, NULL, PROC_DEFAULT_TIMESLICE,
