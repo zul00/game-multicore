@@ -1,6 +1,6 @@
 #include <helix.h>
 
-#include "fifo_buffer.h"
+#include "game_param.h"
 
 #include "core_player.h"
 
@@ -9,7 +9,7 @@
  */
 void player_shoot(bullet_param_t *bullet, player_param_t *player)
 {
-  // Shoot only if bullet is not alive
+  // Shoot only if there is still bullet that is NOT alive 
   if (bullet->alive == 0) 
   {                                                
     //count number of shots fired
@@ -55,8 +55,8 @@ int move_bullets(bullet_param_t *bullet, int speed)
 void *core_player(void *arg)
 {
   uint16_t input = 0;
-  player_param_t param;
-  bullet_param_t b;
+  player_param_t player_param;
+  bullet_param_t bullet_param;
 
   printf("Hello Player Alg!!!\n");
 
@@ -67,17 +67,17 @@ void *core_player(void *arg)
   wr_bullet->validate();
 
   // Initialize player
-  param.box.x = INIT_POS;
-  param.box.y = BOTTOM_POS;
-  param.box.w = PLAYER_WIDTH;
-  param.box.h = PLAYER_HEIGHT;
+  player_param.box.x = INIT_POS;
+  player_param.box.y = BOTTOM_POS;
+  player_param.box.w = PLAYER_WIDTH;
+  player_param.box.h = PLAYER_HEIGHT;
 
   // Initialize bullet
-  b.box.x = INIT_POS;
-  b.box.y = BOTTOM_POS;
-  b.box.x = BULLET_WIDTH;
-  b.box.y = BULLET_HEIGHT;
-  b.alive = 0;
+  bullet_param.box.x = INIT_POS;
+  bullet_param.box.y = BOTTOM_POS;
+  bullet_param.box.x = BULLET_WIDTH;
+  bullet_param.box.y = BULLET_HEIGHT;
+  bullet_param.alive = 0;
 
   for (;;)
   {
@@ -100,34 +100,37 @@ void *core_player(void *arg)
       switch(input)
       {
         case BTN_LEFT:
-          if (param.box.x > MIN_POS)
+          if (player_param.box.x > MIN_POS)
           {
-            param.box.x -= INC_POS;
+            player_param.box.x -= INC_POS;
           }
           break;
+
         case BTN_RIGHT:
-          if (param.box.x < MAX_POS)
+          if (player_param.box.x < MAX_POS)
           {
-            param.box.x += INC_POS;
+            player_param.box.x += INC_POS;
           }
           break;
+
         case BTN_ENTER:
-          player_shoot(&b, &param);
-          
+          player_shoot(&bullet_param, &player_param);
           break;
+
         default:
           break;
       }
-      param.health  = 100;
+      player_param.health  = 100;
 
       printf("button pressed = %s\n ", btn_string[input]);
-      wr_player->push((player_param_t) param);
+      wr_player->push(player_param);
     }
 
     // Update other things
-    move_bullets(&b, -15);
-    wr_bullet->push((bullet_param_t) b);
-    usleep(50000);
+    move_bullets(&bullet_param, -15);
+    wr_bullet->push(bullet_param);
+
+    usleep(RENDER_PERIOD);
   }
 
   return NULL;

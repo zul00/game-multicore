@@ -22,6 +22,10 @@
 #define BULLET_HEIGHT   10 
 #define BULLET_WIDTH    5
 
+/* Timing configureation */
+#define BTN_SCAN_PERIOD   50000   // 50 ms
+#define RENDER_PERIOD     50000   // 50 ms
+
 typedef struct
 {
   coord_t x;

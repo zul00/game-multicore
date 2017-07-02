@@ -10,22 +10,16 @@
 
 #include <helix.h>
 
-#include "libinput.h"
+#include "game_param.h"
+
+#include "core_input.h"
+#include "core_player.h"
+#include "core_render.h"
 
 #define ERREXIT(str) {fprintf(stderr, "Error: " str "\n"); exit(1);}
 #define ERREXIT2(str, ...) {fprintf(stderr, "Error: " str "\n", __VA_ARGS__); exit(1);}
 
 #define N_CORE 4
-
-/* Control Config */
-#define INC_POS   20
-#define INIT_POS  DVI_WIDTH/2
-
-#define P_BULLETS 1
-
-/* Position Limit */
-#define MAX_POS   DVI_WIDTH - PLAYER_WIDTH
-#define MIN_POS   0
 
 /* Declare FIFO buffer */
 CFifo<btn_event_e,CFifo<>::w> *wr_btn;
