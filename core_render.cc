@@ -1,6 +1,6 @@
 #include <helix.h>
 
-#include "fifo_buffer.h"
+#include "game_param.h"
 #include "core_input.h"
 
 #include "core_render.h"
@@ -35,8 +35,8 @@ void draw_player(player_param_t param)
  */
 void *core_render(void *arg)
 {
-  player_param_t input;
-  bullet_param_t b_draw;
+  player_param_t player_param;
+  bullet_param_t bullet_param;
 
   printf("Hello Display!!!\n");
 
@@ -50,29 +50,37 @@ void *core_render(void *arg)
 
   // Reset screen
   fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
-  draw_player(input);
+  draw_player(player_param);
   render_flip_buffer();
 
   for (;;)
   {
+    /* Check FIFO */
     if (rd_player->count())
     {
-      input  = rd_player->front();
+      player_param  = rd_player->front();
       rd_player->pop();
     }
 
     if (rd_bullet->count())
     {
-      b_draw = rd_bullet->front();
+      bullet_param = rd_bullet->front();
       rd_bullet->pop();
     }
     printf("count bullet = %d\n", rd_bullet->count());
 
+    /* Draw Stuffs */
+    // Background
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
-    draw_player(input);
-    draw_bullets(b_draw);
+    // Player
+    draw_player(player_param);
+    // Bullet
+    draw_bullets(bullet_param);
+    // Stats
     drawstring(20, 20, "Space Invader", black, -1, -1);   
+
     render_flip_buffer();
+
     usleep(3300);
   }
 
