@@ -3,6 +3,16 @@
 
 #include <helix.h>
 
+/* Control Config */
+#define INC_POS   20
+#define INIT_POS  DVI_WIDTH/2
+
+#define P_BULLETS 1
+
+/* Position Limit */
+#define MAX_POS   DVI_WIDTH - PLAYER_WIDTH
+#define MIN_POS   0
+
 /* Render config */
 #define BOTTOM_POS      DVI_HEIGHT-20
 
