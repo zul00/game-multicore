@@ -24,7 +24,8 @@
 
 /* Timing configureation */
 #define BTN_SCAN_PERIOD   50000   // 50 ms
-#define RENDER_PERIOD     50000   // 50 ms
+#define UPDATE_PERIOD     50000   // 50 ms
+#define RENDER_PERIOD     3300    // 3.3 ms
 
 typedef struct
 {

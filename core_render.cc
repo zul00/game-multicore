@@ -1,6 +1,7 @@
 #include <helix.h>
 
 #include "game_param.h"
+
 #include "core_input.h"
 
 #include "core_render.h"
@@ -16,7 +17,7 @@ void draw_bullets(bullet_param_t bullet)
         bullet.box.x,               bullet.box.y, 
         bullet.box.x+bullet.box.w,  bullet.box.y-bullet.box.h,
         red);
-  }                                                                           
+  }
 }
 
 /**
@@ -81,7 +82,7 @@ void *core_render(void *arg)
 
     render_flip_buffer();
 
-    usleep(3300);
+    usleep(RENDER_PERIOD);
   }
 
   return NULL;

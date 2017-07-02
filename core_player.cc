@@ -130,7 +130,7 @@ void *core_player(void *arg)
     move_bullets(&bullet_param, -15);
     wr_bullet->push(bullet_param);
 
-    usleep(RENDER_PERIOD);
+    usleep(UPDATE_PERIOD);
   }
 
   return NULL;
