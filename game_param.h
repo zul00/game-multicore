@@ -1,5 +1,5 @@
-#ifndef __FIFO_BUFFER_H
-#define __FIFO_BUFFER_H
+#ifndef __GAME_PARAM_H
+#define __GAME_PARAM_H
 
 #include <helix.h>
 
