@@ -14,19 +14,21 @@
 
 typedef struct
 {
-  coordinate_t pos;
-  coordinate_t size;
-} pos_rect_t;
+  coord_t x;
+  coord_t y;
+  coord_t h;
+  coord_t w;
+} box_area_t;
 
 typedef struct
 {
-  pos_rect_t pos_rect;
+  box_area_t box;
   int16_t health;
 } player_param_t;
 
 typedef struct
 {
-  pos_rect_t pos_rect;
+  box_area_t box;
   bool alive;
 } bullet_param_t;
 

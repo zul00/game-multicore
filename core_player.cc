@@ -12,15 +12,15 @@ void player_shoot(bullet_param_t *bullet, player_param_t *player)
   // Shoot only if bullet is not alive
   if (bullet->alive == 0) 
   {                                                
-    //count number of shots fired                                             
-    //score.shots++;                                                            
+    //count number of shots fired
+    //score.shots++;
 
     // Update bullet position w/ player position
-    bullet->pos_rect.pos.x = player->pos_rect.pos.x + (PLAYER_WIDTH / 2);
-    bullet->pos_rect.pos.y = player->pos_rect.pos.y - (bullet->pos_rect.size.y + 10);
+    bullet->box.x = player->box.x + (PLAYER_WIDTH / 2);
+    bullet->box.y = player->box.y - (bullet->box.h + 10);
 
     bullet->alive = 1; 
-  }                                                                           
+  }
 }
 
 /**
@@ -30,22 +30,22 @@ int move_bullets(bullet_param_t *bullet, int speed)
 {                     
   if (bullet->alive == 1) 
   {                                                      
-    bullet->pos_rect.pos.y += speed;
+    bullet->box.y += speed;
 
     // Bullet out of area BOTTOM
-    if (bullet->pos_rect.pos.y <= 0) 
+    if (bullet->box.y <= 0) 
     {                                                 
       bullet->alive = 0;
-    }                                                                         
+    }
 
     // Bullet out of area TOP
-    if (bullet->pos_rect.pos.y + bullet->pos_rect.size.y >= DVI_HEIGHT) 
+    if (bullet->box.y + bullet->box.h >= DVI_HEIGHT) 
     {                            
       bullet->alive = 0;
-    }                                                                         
-  }                                                                             
+    }
+  }
 
-  return 0;                                                                     
+  return 0;
 }
 
 
@@ -67,16 +67,16 @@ void *core_player(void *arg)
   wr_bullet->validate();
 
   // Initialize player
-  param.pos_rect.pos.x = INIT_POS;
-  param.pos_rect.pos.y = BOTTOM_POS;
-  param.pos_rect.size.x = PLAYER_WIDTH;
-  param.pos_rect.size.y = PLAYER_HEIGHT;
+  param.box.x = INIT_POS;
+  param.box.y = BOTTOM_POS;
+  param.box.w = PLAYER_WIDTH;
+  param.box.h = PLAYER_HEIGHT;
 
   // Initialize bullet
-  b.pos_rect.pos.x = INIT_POS;
-  b.pos_rect.pos.y = BOTTOM_POS;
-  b.pos_rect.size.x = BULLET_WIDTH;
-  b.pos_rect.size.y = BULLET_HEIGHT;
+  b.box.x = INIT_POS;
+  b.box.y = BOTTOM_POS;
+  b.box.x = BULLET_WIDTH;
+  b.box.y = BULLET_HEIGHT;
   b.alive = 0;
 
   for (;;)
@@ -100,15 +100,15 @@ void *core_player(void *arg)
       switch(input)
       {
         case BTN_LEFT:
-          if (param.pos_rect.pos.x > MIN_POS)
+          if (param.box.x > MIN_POS)
           {
-            param.pos_rect.pos.x -= INC_POS;
+            param.box.x -= INC_POS;
           }
           break;
         case BTN_RIGHT:
-          if (param.pos_rect.pos.x < MAX_POS)
+          if (param.box.x < MAX_POS)
           {
-            param.pos_rect.pos.x += INC_POS;
+            param.box.x += INC_POS;
           }
           break;
         case BTN_ENTER:

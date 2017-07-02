@@ -13,8 +13,8 @@ void draw_bullets(bullet_param_t bullet)
   if (bullet.alive == 1) 
   {                                                      
     fillrect(
-        bullet.pos_rect.pos.x,                        bullet.pos_rect.pos.y, 
-        bullet.pos_rect.pos.x+bullet.pos_rect.size.x, bullet.pos_rect.pos.y-bullet.pos_rect.size.y,
+        bullet.box.x,               bullet.box.y, 
+        bullet.box.x+bullet.box.w,  bullet.box.y-bullet.box.h,
         red);
   }                                                                           
 }
@@ -25,8 +25,8 @@ void draw_bullets(bullet_param_t bullet)
 void draw_player(player_param_t param)
 {
   fillrect(
-      param.pos_rect.pos.x,                       param.pos_rect.pos.y, 
-      param.pos_rect.pos.x+param.pos_rect.size.x, param.pos_rect.pos.y-param.pos_rect.size.y,
+      param.box.x,              param.box.y, 
+      param.box.x+param.box.w,  param.box.y-param.box.h,
       black);
 }
 
