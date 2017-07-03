@@ -70,13 +70,19 @@ extern CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 extern CFifo<player_param_t,CFifo<>::w> *wr_player;
 extern CFifo<player_param_t,CFifo<>::r> *rd_player;
 
+//extern CFifo<player_param_t,CFifo<>::w> *wr_player_r;
+//extern CFifo<player_param_t,CFifo<>::r> *rd_player_r;
+
 extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy;
 extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy;
+
+//extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
+//extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
 
 extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
 
-extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet2;
-extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet2;
+//extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_r;
+//extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_r;
 
 #endif
