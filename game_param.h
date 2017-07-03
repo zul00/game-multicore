@@ -3,6 +3,8 @@
 
 #include <helix.h>
 
+#include "core_input.h"
+
 /* Control Config */
 #define INC_POS   20
 #define INIT_POS  DVI_WIDTH/2

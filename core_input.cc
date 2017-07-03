@@ -1,6 +1,6 @@
 #include <helix.h>
 
-#include "fifo_buffer.h"
+#include "game_param.h"
 
 #include "core_input.h"
 

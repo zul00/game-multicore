@@ -75,8 +75,8 @@ void *core_player(void *arg)
   // Initialize bullet
   bullet_param.box.x = INIT_POS;
   bullet_param.box.y = BOTTOM_POS;
-  bullet_param.box.x = BULLET_WIDTH;
-  bullet_param.box.y = BULLET_HEIGHT;
+  bullet_param.box.w = BULLET_WIDTH;
+  bullet_param.box.h = BULLET_HEIGHT;
   bullet_param.alive = 0;
 
   for (;;)
