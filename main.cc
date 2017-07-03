@@ -15,6 +15,7 @@
 #include "core_input.h"
 #include "core_player.h"
 #include "core_render.h"
+#include "core_enemy.h"
 
 #define ERREXIT(str) {fprintf(stderr, "Error: " str "\n"); exit(1);}
 #define ERREXIT2(str, ...) {fprintf(stderr, "Error: " str "\n", __VA_ARGS__); exit(1);}
@@ -59,6 +60,9 @@ int main()
   if(int e=CreateProcess(pid[2], core_render, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, 3))
     ERREXIT2("Process creation failed: %i", e);
+  if(int e=CreateProcess(pid[3], core_enemy, NULL, PROC_DEFAULT_TIMESLICE,
+        PROC_DEFAULT_STACK, 4))
+    ERREXIT2("Process creation failed: %i", e);
 
   // Set Process Flag
   if(int e=SetProcessFlags(pid[0], PROC_FLAG_JOINABLE, 1))
@@ -66,6 +70,8 @@ int main()
   if(int e=SetProcessFlags(pid[1], PROC_FLAG_JOINABLE, 2))
     ERREXIT2("While setting process flags: %i", e);
   if(int e=SetProcessFlags(pid[2], PROC_FLAG_JOINABLE, 3))
+    ERREXIT2("While setting process flags: %i", e);
+  if(int e=SetProcessFlags(pid[3], PROC_FLAG_JOINABLE, 4))
     ERREXIT2("While setting process flags: %i", e);
 
   // Start process
@@ -75,10 +81,13 @@ int main()
     ERREXIT2("Could not start process: %i", e);
   if(int e=StartProcess(pid[2], 3)) 
     ERREXIT2("Could not start process: %i", e);
+  if(int e=StartProcess(pid[3], 4)) 
+    ERREXIT2("Could not start process: %i", e);
 
   if(int e=WaitProcess(pid[0], NULL, 1)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[0], 1, e);
   if(int e=WaitProcess(pid[1], NULL, 2)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[1], 2, e);
   if(int e=WaitProcess(pid[2], NULL, 3)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[2], 3, e);
+  if(int e=WaitProcess(pid[3], NULL, 4)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[3], 4, e);
 
   printf("Game Over\n");
 
