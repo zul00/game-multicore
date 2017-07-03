@@ -22,6 +22,12 @@
 
 #define N_CORE 4
 
+#define CORE_INPUT      1
+#define CORE_PLAYER     2
+#define CORE_RENDER     3
+#define CORE_ENEMY      4
+#define CORE_COLLISSION 5
+
 /* Declare FIFO buffer */
 CFifo<btn_event_e,CFifo<>::w> *wr_btn;
 CFifo<btn_event_e,CFifo<>::r> *rd_btn;
@@ -46,13 +52,20 @@ int main()
   printf("Hello Game!!!\n");
 
   /* Initialize */
-  CFifoPtr<btn_event_e> ff_input = CFifo<btn_event_e>::Create(1, wr_btn, 2, rd_btn, 10);
+  CFifoPtr<btn_event_e> ff_input = 
+    CFifo<btn_event_e>::Create(CORE_INPUT, wr_btn, CORE_PLAYER, rd_btn, 10);
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
-  CFifoPtr<player_param_t> ff_player = CFifo<player_param_t>::Create(2, wr_player, 3, rd_player, 10);
+
+  CFifoPtr<player_param_t> ff_player = 
+    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_RENDER, rd_player, 10);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
-  CFifoPtr<bullet_param_t> ff_bullet = CFifo<bullet_param_t>::Create(2, wr_bullet, 3, rd_bullet, 10);
+
+  CFifoPtr<bullet_param_t> ff_bullet = 
+    CFifo<bullet_param_t>::Create(CORE_PLAYER, wr_bullet, CORE_RENDER, rd_bullet, 10);
   if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
-  CFifoPtr<enemy_param_t> ff_enemy = CFifo<enemy_param_t>::Create(4, wr_enemy, 3, rd_enemy, 10);
+
+  CFifoPtr<enemy_param_t> ff_enemy = 
+    CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy, CORE_RENDER, rd_enemy, 10);
   if(!ff_enemy.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
