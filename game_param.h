@@ -5,11 +5,22 @@
 
 #include "core_input.h"
 
-/* Control Config */
+/* Config Control */
 #define INC_POS   20
-#define INIT_POS  DVI_WIDTH/2
 
+/* Config Parameter */
+// Player
+#define PLAYER_HEIGHT   20
+#define PLAYER_WIDTH    50
+
+#define INIT_POS        DVI_WIDTH/2
 #define P_BULLETS 1
+
+// Enemy
+#define ENEMY_HEIGHT  20
+#define ENEMY_WIDTH   40
+
+#define TOP_POS       20+ENEMY_HEIGHT
 
 /* Position Limit */
 #define MAX_POS   DVI_WIDTH - PLAYER_WIDTH
@@ -18,8 +29,6 @@
 /* Render config */
 #define BOTTOM_POS      DVI_HEIGHT-20
 
-#define PLAYER_HEIGHT   20
-#define PLAYER_WIDTH    50
 
 #define BULLET_HEIGHT   10 
 #define BULLET_WIDTH    5
@@ -47,6 +56,12 @@ typedef struct
 {
   box_area_t box;
   bool alive;
+} enemy_param_t;
+
+typedef struct
+{
+  box_area_t box;
+  bool alive;
 } bullet_param_t;
 
 extern CFifo<btn_event_e,CFifo<>::w> *wr_btn;
@@ -54,6 +69,9 @@ extern CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 
 extern CFifo<player_param_t,CFifo<>::w> *wr_player;
 extern CFifo<player_param_t,CFifo<>::r> *rd_player;
+
+extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy;
+extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy;
 
 extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;

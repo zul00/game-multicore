@@ -32,12 +32,27 @@ void draw_player(player_param_t param)
 }
 
 /**
+ * @brief Draw enemy
+ */
+void draw_enemy(enemy_param_t param)
+{
+  if (param.alive != 0)
+  {
+    fillrect(
+        param.box.x,              param.box.y, 
+        param.box.x+param.box.w,  param.box.y-param.box.h,
+        green);
+  }
+}
+
+/**
  * @brief Process to render display
  */
 void *core_render(void *arg)
 {
   player_param_t player_param;
-  bullet_param_t bullet_param;
+  bullet_param_t pbullet_param;
+  enemy_param_t enemy_param;
 
   printf("Hello Display!!!\n");
 
@@ -48,6 +63,7 @@ void *core_render(void *arg)
   // Check FIFO
   rd_player->validate();
   rd_bullet->validate();
+  rd_enemy->validate();
 
   // Reset screen
   fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
@@ -65,18 +81,26 @@ void *core_render(void *arg)
 
     if (rd_bullet->count())
     {
-      bullet_param = rd_bullet->front();
+      pbullet_param = rd_bullet->front();
       rd_bullet->pop();
     }
-    printf("count bullet = %d\n", rd_bullet->count());
+    //printf("count bullet = %d\n", rd_bullet->count());
+    if (rd_enemy->count())
+    {
+      enemy_param = rd_enemy->front();
+      rd_enemy->pop();
+      printf("count enemy = %d\n", rd_enemy->count());
+    }
 
     /* Draw Stuffs */
     // Background
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
     // Player
     draw_player(player_param);
+    // Enemy
+    draw_enemy(enemy_param);
     // Bullet
-    draw_bullets(bullet_param);
+    draw_bullets(pbullet_param);
     // Stats
     drawstring(20, 20, "Space Invader", black, -1, -1);   
 

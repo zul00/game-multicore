@@ -29,6 +29,9 @@ CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 CFifo<player_param_t,CFifo<>::w> *wr_player;
 CFifo<player_param_t,CFifo<>::r> *rd_player;
 
+CFifo<enemy_param_t,CFifo<>::w> *wr_enemy;
+CFifo<enemy_param_t,CFifo<>::r> *rd_enemy;
+
 CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
 
@@ -49,6 +52,8 @@ int main()
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
   CFifoPtr<bullet_param_t> ff_bullet = CFifo<bullet_param_t>::Create(2, wr_bullet, 3, rd_bullet, 10);
   if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
+  CFifoPtr<enemy_param_t> ff_enemy = CFifo<enemy_param_t>::Create(4, wr_enemy, 3, rd_enemy, 10);
+  if(!ff_enemy.valid()) ERREXIT("Error creating buffer");
 
   // Create Process
   if(int e=CreateProcess(pid[0], core_input, NULL, PROC_DEFAULT_TIMESLICE,
