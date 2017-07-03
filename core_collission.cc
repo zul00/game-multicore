@@ -54,7 +54,7 @@ void *core_collission(void *arg)
 //      wr_bullet_r->push(bullet_param);
     }
 
-    usleep(UPDATE_PERIOD);
+    usleep(1000);
   }
 
   return NULL;
