@@ -10,7 +10,7 @@ void *core_collission(void *arg)
 //  bullet_param_t bullet_param;
 //  player_param_t player_param;
 //
-//  printf("Hello Player Collsission!!!\n");
+//  printf("Hello Player Collission!!!\n");
 //
 //  /* Initialize */
 //  // Check FIFO
@@ -18,9 +18,9 @@ void *core_collission(void *arg)
 //  rd_player->validate();
 //  rd_bullet->validate();
 //
-//  wr_enemy_r->validate();
-//  wr_player_r->validate();
-//  wr_bullet_r->validate();
+////  wr_enemy_r->validate();
+////  wr_player_r->validate();
+////  wr_bullet_r->validate();
 //
 //  for (;;)
 //  {
@@ -29,7 +29,9 @@ void *core_collission(void *arg)
 //      enemy_param = rd_enemy->front();
 //      rd_enemy->pop();
 //
-//      wr_enemy_r->push(enemy_param);
+//      printf("count enemy = %d\n", rd_enemy->count());
+//
+//      //wr_enemy_r->push(enemy_param);
 //    }
 //
 //    if(rd_player->count() > 0)
@@ -37,7 +39,9 @@ void *core_collission(void *arg)
 //      player_param = rd_player->front();
 //      rd_player->pop();
 //
-//      wr_player_r->push(player_param);
+//      printf("count player = %d\n", rd_player->count());
+//
+////      wr_player_r->push(player_param);
 //    }
 //
 //    if(rd_bullet->count() > 0)
@@ -45,7 +49,9 @@ void *core_collission(void *arg)
 //      bullet_param = rd_bullet->front();
 //      rd_bullet->pop();
 //
-//      wr_bullet_r->push(bullet_param);
+//      printf("count bullet = %d\n", rd_bullet->count());
+//
+////      wr_bullet_r->push(bullet_param);
 //    }
 //
 //    usleep(UPDATE_PERIOD);

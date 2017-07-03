@@ -16,7 +16,7 @@
 #include "core_player.h"
 #include "core_render.h"
 #include "core_enemy.h"
-//#include "core_collission.h"
+#include "core_collission.h"
 
 #define ERREXIT(str) {fprintf(stderr, "Error: " str "\n"); exit(1);}
 #define ERREXIT2(str, ...) {fprintf(stderr, "Error: " str "\n", __VA_ARGS__); exit(1);}
@@ -99,9 +99,9 @@ int main()
   if(int e=CreateProcess(pid[3], core_enemy, NULL, PROC_DEFAULT_TIMESLICE,
         PROC_DEFAULT_STACK, CORE_ENEMY))
     ERREXIT2("Process creation failed: %i", e);
-//  if(int e=CreateProcess(pid[4], core_collission, NULL, PROC_DEFAULT_TIMESLICE,
-//        PROC_DEFAULT_STACK, CORE_COLLISSION))
-//    ERREXIT2("Process creation failed: %i", e);
+  if(int e=CreateProcess(pid[4], core_collission, NULL, PROC_DEFAULT_TIMESLICE,
+        PROC_DEFAULT_STACK, CORE_COLLISSION))
+    ERREXIT2("Process creation failed: %i", e);
 
   // Set Process Flag
   if(int e=SetProcessFlags(pid[0], PROC_FLAG_JOINABLE, CORE_INPUT))
@@ -112,8 +112,8 @@ int main()
     ERREXIT2("While setting process flags: %i", e);
   if(int e=SetProcessFlags(pid[3], PROC_FLAG_JOINABLE, CORE_ENEMY))
     ERREXIT2("While setting process flags: %i", e);
-//  if(int e=SetProcessFlags(pid[4], PROC_FLAG_JOINABLE, CORE_COLLISSION))
-//    ERREXIT2("While setting process flags: %i", e);
+  if(int e=SetProcessFlags(pid[4], PROC_FLAG_JOINABLE, CORE_COLLISSION))
+    ERREXIT2("While setting process flags: %i", e);
 
   // Start process
   if(int e=StartProcess(pid[0], CORE_INPUT)) 
@@ -124,14 +124,14 @@ int main()
     ERREXIT2("Could not start process: %i", e);
   if(int e=StartProcess(pid[3], CORE_ENEMY)) 
     ERREXIT2("Could not start process: %i", e);
-//  if(int e=StartProcess(pid[4], CORE_COLLISSION)) 
-//    ERREXIT2("Could not start process: %i", e);
+  if(int e=StartProcess(pid[4], CORE_COLLISSION)) 
+    ERREXIT2("Could not start process: %i", e);
 
   if(int e=WaitProcess(pid[0], NULL, CORE_INPUT)) ERREXIT2("Waiting on ping %i@%i: %i\n",   pid[0], 1,  e);
   if(int e=WaitProcess(pid[1], NULL, CORE_PLAYER)) ERREXIT2("Waiting on ping %i@%i: %i\n",  pid[1], 2, e);
   if(int e=WaitProcess(pid[2], NULL, CORE_RENDER)) ERREXIT2("Waiting on ping %i@%i: %i\n",  pid[2], 3, e);
   if(int e=WaitProcess(pid[3], NULL, CORE_ENEMY)) ERREXIT2("Waiting on ping %i@%i: %i\n",   pid[3], 4,  e);
-//  if(int e=WaitProcess(pid[4], NULL, CORE_COLLISSION)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[4], 5, e);
+  if(int e=WaitProcess(pid[4], NULL, CORE_COLLISSION)) ERREXIT2("Waiting on ping %i@%i: %i\n", pid[4], 5, e);
 
   printf("Game Over\n");
 
