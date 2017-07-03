@@ -54,7 +54,7 @@ void *core_render(void *arg)
 //  bullet_param_t pbullet_param;
   enemy_param_t enemy_param;
 
-  printf("Hello Display!!!\n");
+//  printf("Hello Display!!!\n");
 
   /* Initialize */
   // Init Render

@@ -77,7 +77,7 @@ void *core_player(void *arg)
   bullet_param.box.y = BOTTOM_POS;
   bullet_param.box.w = BULLET_WIDTH;
   bullet_param.box.h = BULLET_HEIGHT;
-  bullet_param.alive = 0;
+  bullet_param.alive = 1;
 
   for (;;)
   {
