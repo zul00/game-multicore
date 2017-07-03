@@ -34,8 +34,8 @@
 #define BULLET_WIDTH    5
 
 /* Timing configureation */
-#define BTN_SCAN_PERIOD   50000   // 50 ms
-#define UPDATE_PERIOD     50000   // 50 ms
+#define BTN_SCAN_PERIOD   500000   // 50 ms
+#define UPDATE_PERIOD     500000   // 50 ms
 #define RENDER_PERIOD     3300    // 3.3 ms
 
 typedef struct
@@ -76,8 +76,8 @@ extern CFifo<player_param_t,CFifo<>::r> *rd_player;
 extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy;
 extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy;
 
-//extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
-//extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
+extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
+extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
 
 extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;

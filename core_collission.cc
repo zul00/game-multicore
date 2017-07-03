@@ -18,7 +18,7 @@ void *core_collission(void *arg)
   rd_player->validate();
   rd_bullet->validate();
 
-////  wr_enemy_r->validate();
+  wr_enemy_r->validate();
 ////  wr_player_r->validate();
 ////  wr_bullet_r->validate();
 
@@ -29,9 +29,9 @@ void *core_collission(void *arg)
       enemy_param = rd_enemy->front();
       rd_enemy->pop();
 
-      printf("count enemy = %d\n", rd_enemy->count());
+//      printf("count enemy = %d\n", rd_enemy->count());
 
-      //wr_enemy_r->push(enemy_param);
+      wr_enemy_r->push(enemy_param);
     }
 
     if(rd_player->count() > 0)
