@@ -76,8 +76,8 @@ extern CFifo<player_param_t,CFifo<>::r> *rd_player;
 extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy;
 extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy;
 
-extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
-extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
+//extern CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
+//extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
 
 extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;

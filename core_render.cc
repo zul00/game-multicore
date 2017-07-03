@@ -63,7 +63,7 @@ void *core_render(void *arg)
   // Check FIFO
 //  rd_player->validate();
 //  rd_bullet->validate();
-  rd_enemy_r->validate();
+//  rd_enemy_r->validate();
 
   // Reset screen
   fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
@@ -85,12 +85,12 @@ void *core_render(void *arg)
 //      rd_bullet->pop();
 //    }
     //printf("count bullet = %d\n", rd_bullet->count());
-    if (rd_enemy_r->count())
-    {
-      enemy_param = rd_enemy_r->front();
-      rd_enemy_r->pop();
-      printf("count enemy from render = %d\n", rd_enemy->count());
-    }
+//    if (rd_enemy_r->count())
+//    {
+//      enemy_param = rd_enemy_r->front();
+//      rd_enemy_r->pop();
+//      printf("count enemy from render = %d\n", rd_enemy->count());
+//    }
 
     /* Draw Stuffs */
     // Background
