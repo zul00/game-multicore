@@ -63,7 +63,7 @@ int main()
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<player_param_t> ff_player = 
-    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_RENDER, rd_player, 10);
+    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_COLLISSION, rd_player, 10);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
   
   CFifoPtr<player_param_t> ff_player_r = 
@@ -79,7 +79,7 @@ int main()
   if(!ff_bullet_r.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<enemy_param_t> ff_enemy = 
-    CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy, CORE_RENDER, rd_enemy, 10);
+    CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy, CORE_COLLISSION, rd_enemy, 10);
   if(!ff_enemy.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<enemy_param_t> ff_enemy_r = 

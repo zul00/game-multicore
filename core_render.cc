@@ -61,9 +61,9 @@ void *core_render(void *arg)
   render_init(1);
 
   // Check FIFO
-  rd_player->validate("Failed validating");
+  rd_player_r->validate("Failed validating");
   rd_bullet_r->validate("Failed validating");
-  rd_enemy->validate("Failed validating");
+  rd_enemy_r->validate("Failed validating");
 
   // Reset screen
   fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
@@ -73,10 +73,10 @@ void *core_render(void *arg)
   for (;;)
   {
     /* Check FIFO */
-    if (rd_player->count())
+    if (rd_player_r->count())
     {
-      player_param  = rd_player->front();
-      rd_player->pop();
+      player_param  = rd_player_r->front();
+      rd_player_r->pop();
     }
 
     if (rd_bullet_r->count())
@@ -84,11 +84,11 @@ void *core_render(void *arg)
       pbullet_param = rd_bullet_r->front();
       rd_bullet_r->pop();
     }
-    //printf("count bullet = %d\n", rd_bullet->count());
-    if (rd_enemy->count())
+
+    if (rd_enemy_r->count())
     {
-      enemy_param = rd_enemy->front();
-      rd_enemy->pop();
+      enemy_param = rd_enemy_r->front();
+      rd_enemy_r->pop();
     }
 
     /* Draw Stuffs */
