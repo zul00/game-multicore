@@ -10,17 +10,15 @@ void *core_collission(void *arg)
   bullet_param_t bullet_param;
   player_param_t player_param;
 
-  printf("Hello Player Collission!!!\n");
-
   /* Initialize */
   // Check FIFO
-  rd_enemy->validate();
-  rd_player->validate();
-  rd_bullet->validate();
+  rd_enemy->validate("Failed validating");
+  rd_player->validate("Failed validating");
+  rd_bullet->validate("Failed validating");
 
-////  wr_enemy_r->validate();
-////  wr_player_r->validate();
-////  wr_bullet_r->validate();
+  wr_enemy_r->validate("Failed validating");
+  wr_player_r->validate("Failed validating");
+  wr_bullet_r->validate("Failed validating");
 
   for (;;)
   {
@@ -29,9 +27,7 @@ void *core_collission(void *arg)
       enemy_param = rd_enemy->front();
       rd_enemy->pop();
 
-      printf("count enemy = %d\n", rd_enemy->count());
-
-      //wr_enemy_r->push(enemy_param);
+      wr_enemy_r->push(enemy_param);
     }
 
     if(rd_player->count() > 0)
@@ -39,9 +35,7 @@ void *core_collission(void *arg)
       player_param = rd_player->front();
       rd_player->pop();
 
-      printf("count player = %d\n", rd_player->count());
-
-//      wr_player_r->push(player_param);
+      wr_player_r->push(player_param);
     }
 
     if(rd_bullet->count() > 0)
@@ -49,12 +43,10 @@ void *core_collission(void *arg)
       bullet_param = rd_bullet->front();
       rd_bullet->pop();
 
-      printf("count bullet = %d\n", rd_bullet->count());
-
-//      wr_bullet_r->push(bullet_param);
+      wr_bullet_r->push(bullet_param);
     }
 
-    usleep(1000);
+    usleep(UPDATE_PERIOD);
   }
 
   return NULL;

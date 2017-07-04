@@ -23,10 +23,10 @@ void *core_input(void *arg)
   int16_t bt_state = 0;
   uint8_t idx = 0;
 
-  printf("Hello Poll!!!\n");
+//  printf("Hello Poll!!!\n");
 
   // Check FIFO
-  wr_btn->validate();
+  wr_btn->validate("Failed validating");
   while(1)
   {
     // Get buttons state

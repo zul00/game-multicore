@@ -36,20 +36,20 @@ CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 CFifo<player_param_t,CFifo<>::w> *wr_player;
 CFifo<player_param_t,CFifo<>::r> *rd_player;
 
-//CFifo<player_param_t,CFifo<>::w> *wr_player_r;
-//CFifo<player_param_t,CFifo<>::r> *rd_player_r;
-//
+CFifo<player_param_t,CFifo<>::w> *wr_player_r;
+CFifo<player_param_t,CFifo<>::r> *rd_player_r;
+
 CFifo<enemy_param_t,CFifo<>::w> *wr_enemy;
 CFifo<enemy_param_t,CFifo<>::r> *rd_enemy;
 
-//CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
-//CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
-//
+CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
+CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
+
 CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
 
-//CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_r;
-//CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_r;
+CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_r;
+CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_r;
 
 int main()
 {
@@ -66,25 +66,34 @@ int main()
     CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_COLLISSION, rd_player, 10);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
   
-//  CFifoPtr<player_param_t> ff_player_r = 
-//    CFifo<player_param_t>::Create(CORE_COLLISSION, wr_player_r, CORE_RENDER, rd_player_r, 10);
-//  if(!ff_player.valid()) ERREXIT("Error creating buffer");
+  CFifoPtr<player_param_t> ff_player_r = 
+    CFifo<player_param_t>::Create(CORE_COLLISSION, wr_player_r, CORE_RENDER, rd_player_r, 10);
+  if(!ff_player_r.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bullet_param_t> ff_bullet = 
     CFifo<bullet_param_t>::Create(CORE_PLAYER, wr_bullet, CORE_COLLISSION, rd_bullet, 10);
   if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
 
-//  CFifoPtr<bullet_param_t> ff_bullet_r = 
-//    CFifo<bullet_param_t>::Create(CORE_COLLISSION, wr_bullet_r, CORE_RENDER, rd_bullet_r, 10);
-//  if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
+  CFifoPtr<bullet_param_t> ff_bullet_r = 
+    CFifo<bullet_param_t>::Create(CORE_COLLISSION, wr_bullet_r, CORE_RENDER, rd_bullet_r, 10);
+  if(!ff_bullet_r.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<enemy_param_t> ff_enemy = 
     CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy, CORE_COLLISSION, rd_enemy, 10);
   if(!ff_enemy.valid()) ERREXIT("Error creating buffer");
 
-//  CFifoPtr<enemy_param_t> ff_enemy_r = 
-//    CFifo<enemy_param_t>::Create(CORE_COLLISSION, wr_enemy_r, CORE_RENDER, rd_enemy_r, 10);
-//  if(!ff_enemy.valid()) ERREXIT("Error creating buffer");
+  CFifoPtr<enemy_param_t> ff_enemy_r = 
+    CFifo<enemy_param_t>::Create(CORE_COLLISSION, wr_enemy_r, CORE_RENDER, rd_enemy_r, 10);
+  if(!ff_enemy_r.valid()) ERREXIT("Error creating buffer");
+
+  // Flush FIFO
+  FlushDCache();
+  mc_flush(ff_player);
+  mc_flush(ff_player_r);
+  mc_flush(ff_enemy);
+  mc_flush(ff_enemy_r);
+  mc_flush(ff_bullet);
+  mc_flush(ff_bullet_r);
 
   // Create Process
   if(int e=CreateProcess(pid[0], core_input, NULL, PROC_DEFAULT_TIMESLICE,

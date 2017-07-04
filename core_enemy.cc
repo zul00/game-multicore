@@ -9,11 +9,11 @@ void *core_enemy(void *arg)
 {
   enemy_param_t enemy_param;
 
-  printf("Hello Player Alg!!!\n");
+//  printf("Hello Enemy Alg!!!\n");
 
   /* Initialize */
   // Check FIFO
-  wr_enemy->validate();
+  wr_enemy->validate("Failed validating");
 
   // Initialize enemy
   enemy_param.box.x = INIT_POS;
