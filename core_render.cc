@@ -54,6 +54,10 @@ void *core_render(void *arg)
   bullet_param_t pbullet_param;
   enemy_param_t enemy_param;
 
+  bool f_enemy = false;
+  bool f_player = false;
+  bool f_bullet = false;
+
 //  printf("Hello Display!!!\n");
 
   /* Initialize */
@@ -67,7 +71,6 @@ void *core_render(void *arg)
 
   // Reset screen
   fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
-  draw_player(player_param);
   render_flip_buffer();
 
   for (;;)
@@ -77,29 +80,38 @@ void *core_render(void *arg)
     {
       player_param  = rd_player_r->front();
       rd_player_r->pop();
+
+      f_player = true;
     }
 
     if (rd_bullet_r->count())
     {
       pbullet_param = rd_bullet_r->front();
       rd_bullet_r->pop();
+
+      f_bullet = true;
     }
 
     if (rd_enemy_r->count())
     {
       enemy_param = rd_enemy_r->front();
       rd_enemy_r->pop();
+
+      f_enemy = true;
     }
 
     /* Draw Stuffs */
     // Background
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
     // Player
-    draw_player(player_param);
+    if (f_player)
+    {draw_player(player_param);}
     // Enemy
-    draw_enemy(enemy_param);
+    if (f_enemy)
+    {draw_enemy(enemy_param);}
     // Bullet
-    draw_bullets(pbullet_param);
+    if (f_bullet)
+    {draw_bullets(pbullet_param);}
     // Stats
     drawstring(20, 20, "Space Invader", black, -1, -1);   
 
