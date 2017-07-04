@@ -49,7 +49,7 @@ void *core_collission(void *arg)
   rd_bullet->validate("Failed validating");
 
   wr_enemy_c->validate("Failed validating");
-  wr_player_r->validate("Failed validating");
+  wr_player_c->validate("Failed validating");
   wr_bullet_c->validate("Failed validating");
 
   for (;;)
