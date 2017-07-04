@@ -26,7 +26,7 @@ void *core_input(void *arg)
 //  printf("Hello Poll!!!\n");
 
   // Check FIFO
-  wr_btn->validate();
+  wr_btn->validate("Failed validating");
   while(1)
   {
     // Get buttons state

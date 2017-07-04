@@ -13,7 +13,7 @@ void *core_enemy(void *arg)
 
   /* Initialize */
   // Check FIFO
-  wr_enemy->validate();
+  wr_enemy->validate("Failed validating");
 
   // Initialize enemy
   enemy_param.box.x = INIT_POS;

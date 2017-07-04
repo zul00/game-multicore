@@ -61,9 +61,9 @@ void *core_render(void *arg)
   render_init(1);
 
   // Check FIFO
-  rd_player->validate();
-  rd_bullet->validate();
-  rd_enemy->validate();
+  rd_player->validate("Failed validating");
+  rd_bullet->validate("Failed validating");
+  rd_enemy->validate("Failed validating");
 
   // Reset screen
   fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);

@@ -62,9 +62,9 @@ void *core_player(void *arg)
 
   /* Initialize */
   // Check FIFO
-  rd_btn->validate();
-  wr_player->validate();
-  wr_bullet->validate();
+  rd_btn->validate("Failed validating");
+  wr_player->validate("Failed validating");
+  wr_bullet->validate("Failed validating");
 
   // Initialize player
   player_param.box.x = INIT_POS;
