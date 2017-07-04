@@ -9,7 +9,7 @@ void *core_enemy(void *arg)
 {
   enemy_param_t enemy_param;
 
-  printf("Hello Player Alg!!!\n");
+//  printf("Hello Enemy Alg!!!\n");
 
   /* Initialize */
   // Check FIFO

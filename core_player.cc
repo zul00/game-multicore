@@ -58,7 +58,7 @@ void *core_player(void *arg)
   player_param_t player_param;
   bullet_param_t bullet_param;
 
-  printf("Hello Player Alg!!!\n");
+//  printf("Hello Player Alg!!!\n");
 
   /* Initialize */
   // Check FIFO
