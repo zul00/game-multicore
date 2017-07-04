@@ -62,7 +62,7 @@ void *core_render(void *arg)
 
   // Check FIFO
   rd_player->validate("Failed validating");
-  rd_bullet->validate("Failed validating");
+  rd_bullet_r->validate("Failed validating");
   rd_enemy->validate("Failed validating");
 
   // Reset screen
@@ -79,10 +79,10 @@ void *core_render(void *arg)
       rd_player->pop();
     }
 
-    if (rd_bullet->count())
+    if (rd_bullet_r->count())
     {
-      pbullet_param = rd_bullet->front();
-      rd_bullet->pop();
+      pbullet_param = rd_bullet_r->front();
+      rd_bullet_r->pop();
     }
     //printf("count bullet = %d\n", rd_bullet->count());
     if (rd_enemy->count())
