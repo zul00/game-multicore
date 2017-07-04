@@ -133,9 +133,8 @@ void *core_player(void *arg)
     move_bullets(&bullet_param, -15);
     if (rd_bullet_c->count() > 0)
     {
-      bullet_alive = rd_bullet_c->front();
+      bullet_alive = !rd_bullet_c->front();
       bullet_param.alive = bullet_alive;
-      //printf("Here\n");
       rd_bullet_c->pop();
     }
 

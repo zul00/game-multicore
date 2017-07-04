@@ -88,7 +88,7 @@ void *core_collission(void *arg)
         bullet_param.alive = 0;
         enemy_param.alive = 0;
         hit = 0;
-        wr_bullet_c->push(false);
+        wr_bullet_c->push(true);
       }
       wr_enemy_c->push(enemy_param);
       f_enemy = 0; f_bullet = 0;
