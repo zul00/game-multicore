@@ -36,6 +36,9 @@ CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 CFifo<player_param_t,CFifo<>::w> *wr_player;
 CFifo<player_param_t,CFifo<>::r> *rd_player;
 
+CFifo<bool,CFifo<>::w> *wr_player_c;
+CFifo<bool,CFifo<>::r> *rd_player_c;
+
 CFifo<player_param_t,CFifo<>::w> *wr_player_r;
 CFifo<player_param_t,CFifo<>::r> *rd_player_r;
 
@@ -72,8 +75,12 @@ int main()
     CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_COLLISSION, rd_player, 10);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
   
+  CFifoPtr<bool> ff_player_c = 
+    CFifo<bool>::Create(CORE_COLLISSION, wr_player_c, CORE_PLAYER, rd_player_c, 10);
+  if(!ff_player_c.valid()) ERREXIT("Error creating buffer");
+
   CFifoPtr<player_param_t> ff_player_r = 
-    CFifo<player_param_t>::Create(CORE_COLLISSION, wr_player_r, CORE_RENDER, rd_player_r, 10);
+    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player_r, CORE_RENDER, rd_player_r, 10);
   if(!ff_player_r.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bullet_param_t> ff_bullet = 

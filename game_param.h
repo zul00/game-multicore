@@ -70,6 +70,9 @@ extern CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 extern CFifo<player_param_t,CFifo<>::w> *wr_player;
 extern CFifo<player_param_t,CFifo<>::r> *rd_player;
 
+extern CFifo<bool,CFifo<>::w> *wr_player_c;
+extern CFifo<bool,CFifo<>::r> *rd_player_c;
+
 extern CFifo<player_param_t,CFifo<>::w> *wr_player_r;
 extern CFifo<player_param_t,CFifo<>::r> *rd_player_r;
 

@@ -65,6 +65,7 @@ void *core_player(void *arg)
   // Check FIFO
   rd_btn->validate("Failed validating");
   wr_player->validate("Failed validating");
+  wr_player_r->validate("Failed validating");
   wr_bullet->validate("Failed validating");
   wr_bullet_r->validate("Failed validating");
 
@@ -126,6 +127,7 @@ void *core_player(void *arg)
 
       printf("button pressed = %s\n ", btn_string[input]);
       wr_player->push(player_param);
+      wr_player_r->push(player_param);
     }
 
     // Update other things

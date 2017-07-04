@@ -66,8 +66,6 @@ void *core_collission(void *arg)
     {
       player_param = rd_player->front();
       rd_player->pop();
-
-      wr_player_r->push(player_param);
     }
 
     if(rd_bullet->count() > 0)
