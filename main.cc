@@ -42,8 +42,8 @@ CFifo<player_param_t,CFifo<>::r> *rd_player_r;
 CFifo<enemy_param_t,CFifo<>::w> *wr_enemy;
 CFifo<enemy_param_t,CFifo<>::r> *rd_enemy;
 
-CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_c;
-CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_c;
+CFifo<bool,CFifo<>::w> *wr_enemy_c;
+CFifo<bool,CFifo<>::r> *rd_enemy_c;
 
 CFifo<enemy_param_t,CFifo<>::w> *wr_enemy_r;
 CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
@@ -92,8 +92,8 @@ int main()
     CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy, CORE_COLLISSION, rd_enemy, 10);
   if(!ff_enemy.valid()) ERREXIT("Error creating buffer");
 
-  CFifoPtr<enemy_param_t> ff_enemy_c = 
-    CFifo<enemy_param_t>::Create(CORE_COLLISSION, wr_enemy_c, CORE_ENEMY, rd_enemy_c, 10);
+  CFifoPtr<bool> ff_enemy_c = 
+    CFifo<bool>::Create(CORE_COLLISSION, wr_enemy_c, CORE_ENEMY, rd_enemy_c, 10);
   if(!ff_enemy_c.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<enemy_param_t> ff_enemy_r = 
