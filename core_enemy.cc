@@ -8,6 +8,7 @@
 void *core_enemy(void *arg)
 {
   enemy_param_t enemy_param;
+  bool enemy_just_died = 0;
 
 //  printf("Hello Enemy Alg!!!\n");
 
@@ -31,10 +32,18 @@ void *core_enemy(void *arg)
     if(rd_enemy_c->count() > 0)
     {
       enemy_param = rd_enemy_c->front();
+      if (enemy_param.alive == 0)
+      {
+        enemy_just_died = 1;
+      }
       rd_enemy_c->pop();
     }
 
-    wr_enemy_r->push(enemy_param);
+    if(enemy_param.alive == true || enemy_just_died == 1)
+    {
+      wr_enemy_r->push(enemy_param);
+      enemy_just_died = 0;
+    }
 
     usleep(UPDATE_PERIOD);
   }

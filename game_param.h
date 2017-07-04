@@ -85,7 +85,10 @@ extern CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
 extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
 
+extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_c;
+extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_c;
+
 extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_r;
 extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_r;
 
-#endif
+# ndif

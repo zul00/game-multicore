@@ -50,7 +50,7 @@ void *core_collission(void *arg)
 
   wr_enemy_c->validate("Failed validating");
   wr_player_r->validate("Failed validating");
-  wr_bullet_r->validate("Failed validating");
+  wr_bullet_c->validate("Failed validating");
 
   for (;;)
   {
@@ -85,10 +85,11 @@ void *core_collission(void *arg)
       if (hit == 1)
       {
         printf("Hit detect = %d\n", hit);
-        bullet_param.alive = !hit;
-        enemy_param.alive = !hit;
+        bullet_param.alive = 0;
+        enemy_param.alive = 0;
+        hit = 0;
       }
-      wr_bullet_r->push(bullet_param);
+      wr_bullet_c->push(bullet_param);
       wr_enemy_c->push(enemy_param);
       f_enemy = 0; f_bullet = 0;
     }
@@ -99,7 +100,7 @@ void *core_collission(void *arg)
     }
     if (f_bullet)
     {
-      wr_bullet_r->push(bullet_param);
+      wr_bullet_c->push(bullet_param);
       f_bullet = 0;
     }
 
