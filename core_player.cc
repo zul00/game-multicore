@@ -56,9 +56,9 @@ void *core_player(void *arg)
 {
   uint16_t input = 0;
   bool bullet_alive_prev = 0;
+  bool bullet_alive = 0;
   player_param_t player_param;
   bullet_param_t bullet_param;
-  bullet_param_t bullet_param_c;
 
 //  printf("Hello Player Alg!!!\n");
 
@@ -133,8 +133,8 @@ void *core_player(void *arg)
     move_bullets(&bullet_param, -15);
     if (rd_bullet_c->count() > 0)
     {
-      bullet_param_c = rd_bullet_c->front();
-      bullet_param.alive = bullet_param_c.alive;
+      bullet_alive = rd_bullet_c->front();
+      bullet_param.alive = bullet_alive;
       //printf("Here\n");
       rd_bullet_c->pop();
     }

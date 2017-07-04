@@ -51,8 +51,8 @@ CFifo<enemy_param_t,CFifo<>::r> *rd_enemy_r;
 CFifo<bullet_param_t,CFifo<>::w> *wr_bullet;
 CFifo<bullet_param_t,CFifo<>::r> *rd_bullet;
 
-CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_c;
-CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_c;
+CFifo<bool,CFifo<>::w> *wr_bullet_c;
+CFifo<bool,CFifo<>::r> *rd_bullet_c;
 
 CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_r;
 CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_r;
@@ -80,8 +80,8 @@ int main()
     CFifo<bullet_param_t>::Create(CORE_PLAYER, wr_bullet, CORE_COLLISSION, rd_bullet, 10);
   if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
 
-  CFifoPtr<bullet_param_t> ff_bullet_c = 
-    CFifo<bullet_param_t>::Create(CORE_COLLISSION, wr_bullet_c, CORE_PLAYER, rd_bullet_c, 10);
+  CFifoPtr<bool> ff_bullet_c = 
+    CFifo<bool>::Create(CORE_COLLISSION, wr_bullet_c, CORE_PLAYER, rd_bullet_c, 10);
   if(!ff_bullet_c.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bullet_param_t> ff_bullet_r = 

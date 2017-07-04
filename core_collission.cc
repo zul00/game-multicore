@@ -78,7 +78,7 @@ void *core_collission(void *arg)
       f_bullet = 1;
     }
 
-    // Send to render
+    // Send back
     if (f_enemy && f_bullet)
     {
       hit = collision_detect(enemy_param.box, bullet_param.box);
@@ -88,20 +88,10 @@ void *core_collission(void *arg)
         bullet_param.alive = 0;
         enemy_param.alive = 0;
         hit = 0;
+        wr_bullet_c->push(false);
       }
-      wr_bullet_c->push(bullet_param);
       wr_enemy_c->push(enemy_param);
       f_enemy = 0; f_bullet = 0;
-    }
-    if (f_enemy)
-    {
-      wr_enemy_c->push(enemy_param);
-      f_enemy = 0;
-    }
-    if (f_bullet)
-    {
-      wr_bullet_c->push(bullet_param);
-      f_bullet = 0;
     }
 
     usleep(UPDATE_PERIOD);
