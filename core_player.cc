@@ -55,7 +55,7 @@ int move_bullets(bullet_param_t *bullet, int speed)
 void *core_player(void *arg)
 {
   uint16_t input = 0;
-  bool bullet_just_died = 0;
+  bool bullet_alive_prev = 0;
   player_param_t player_param;
   bullet_param_t bullet_param;
   bullet_param_t bullet_param_c;
@@ -139,23 +139,23 @@ void *core_player(void *arg)
       rd_bullet_c->pop();
     }
 
-    if (bullet_param.alive == 0 && bullet_just_died == 0)
+    // Push bullet
+    if (bullet_param.alive == true)
     {
-      bullet_just_died = 1;
-      printf("Here3\n");
-    }
-
-    if (bullet_param.alive == true || bullet_just_died == 1)
-    {
-      if(bullet_just_died != 1)
-      {
         wr_bullet->push(bullet_param);
-      }
-      wr_bullet_r->push(bullet_param);
-      printf("Just died %d\n", bullet_just_died);
-
-      bullet_just_died = 0;
+        wr_bullet_r->push(bullet_param);
     }
+    else
+    {
+      if (bullet_alive_prev)
+      {
+        wr_bullet_r->push(bullet_param);
+        printf("Bullet last update\n");
+      }
+    }
+
+    // Update previous value
+    bullet_alive_prev = bullet_param.alive;
 
     usleep(UPDATE_PERIOD);
   }
