@@ -14,6 +14,8 @@ void *core_enemy(void *arg)
   /* Initialize */
   // Check FIFO
   wr_enemy->validate("Failed validating");
+  wr_enemy_r->validate("Failed validating");
+  rd_enemy_c->validate("Failed validating");
 
   // Initialize enemy
   enemy_param.box.x = INIT_POS;
@@ -25,6 +27,14 @@ void *core_enemy(void *arg)
   for (;;)
   {
     wr_enemy->push(enemy_param);
+
+    if(rd_enemy_c->count() > 0)
+    {
+      enemy_param = rd_enemy_c->front();
+      rd_enemy_c->pop();
+    }
+
+    wr_enemy_r->push(enemy_param);
 
     usleep(UPDATE_PERIOD);
   }
