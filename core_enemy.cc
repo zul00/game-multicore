@@ -55,6 +55,7 @@ void *core_enemy(void *arg)
 {
   enemy_param_t enemy_param;
   bullet_param_t bullet_param;
+  bool bullet_alive_prev = 0;
   bool enemy_alive_prev = 0;
   time_t t;
 
@@ -65,6 +66,8 @@ void *core_enemy(void *arg)
   wr_enemy->validate("Failed validating");
   wr_enemy_r->validate("Failed validating");
   rd_enemy_c->validate("Failed validating");
+  wr_ebullet->validate("Failed validating");
+  wr_ebullet_r->validate("Failed validating");
 
   // Initialize enemy
   enemy_param.box.x = INIT_POS;
@@ -102,8 +105,28 @@ void *core_enemy(void *arg)
     // Enemy shoot
     enemy_shoot(&bullet_param, &enemy_param);
     move_ebullets(&bullet_param, 15);
+    if (rd_ebullet_c->count() > 0)
+    {
+      bullet_param.alive = !rd_ebullet_c->front();
+      rd_ebullet_c->pop();
+    }
+    // Push bullet
+    if (bullet_param.alive == true)
+    {
+        wr_ebullet->push(bullet_param);
+        wr_ebullet_r->push(bullet_param);
+    }
+    else
+    {
+      if (bullet_alive_prev)
+      {
+        wr_ebullet_r->push(bullet_param);
+        printf("Bullet last update\n");
+      }
+    }
 
     // Update previous value
+    bullet_alive_prev = bullet_param.alive;
     enemy_alive_prev = enemy_param.alive;
 
     usleep(UPDATE_PERIOD);

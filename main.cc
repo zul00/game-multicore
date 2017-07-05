@@ -60,6 +60,15 @@ CFifo<bool,CFifo<>::r> *rd_bullet_c;
 CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_r;
 CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_r;
 
+CFifo<bullet_param_t,CFifo<>::w> *wr_ebullet;
+CFifo<bullet_param_t,CFifo<>::r> *rd_ebullet;
+
+CFifo<bool,CFifo<>::w> *wr_ebullet_c;
+CFifo<bool,CFifo<>::r> *rd_ebullet_c;
+
+CFifo<bullet_param_t,CFifo<>::w> *wr_ebullet_r;
+CFifo<bullet_param_t,CFifo<>::r> *rd_ebullet_r;
+
 int main()
 {
   pid_t pid[N_CORE];
@@ -107,6 +116,19 @@ int main()
     CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy_r, CORE_RENDER, rd_enemy_r, 10);
   if(!ff_enemy_r.valid()) ERREXIT("Error creating buffer");
 
+  // Enemy bullet
+  CFifoPtr<bullet_param_t> ff_ebullet = 
+    CFifo<bullet_param_t>::Create(CORE_ENEMY, wr_ebullet, CORE_COLLISSION, rd_ebullet, 10);
+  if(!ff_ebullet.valid()) ERREXIT("Error creating buffer");
+
+  CFifoPtr<bool> ff_ebullet_c = 
+    CFifo<bool>::Create(CORE_COLLISSION, wr_ebullet_c, CORE_ENEMY, rd_ebullet_c, 10);
+  if(!ff_ebullet_c.valid()) ERREXIT("Error creating buffer");
+
+  CFifoPtr<bullet_param_t> ff_ebullet_r = 
+    CFifo<bullet_param_t>::Create(CORE_ENEMY, wr_ebullet_r, CORE_RENDER, rd_ebullet_r, 10);
+  if(!ff_ebullet_r.valid()) ERREXIT("Error creating buffer");
+
   // Flush FIFO
   mc_flush(ff_player);
   mc_flush(ff_player_r);
@@ -116,6 +138,9 @@ int main()
   mc_flush(ff_bullet);
   mc_flush(ff_bullet_r);
   mc_flush(ff_bullet_c);
+  mc_flush(ff_ebullet);
+  mc_flush(ff_ebullet_r);
+  mc_flush(ff_ebullet_c);
   FlushDCache();
 
   // Create Process

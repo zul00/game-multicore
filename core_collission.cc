@@ -36,21 +36,25 @@ void *core_collission(void *arg)
 {
   enemy_param_t enemy_param;
   bullet_param_t bullet_param;
+  bullet_param_t ebullet_param;
   player_param_t player_param;
 
   bool hit = 0;
   bool f_enemy = 0;
   bool f_bullet = 0;
+  bool f_ebullet = 0;
 
   /* Initialize */
   // Check FIFO
   rd_enemy->validate("Failed validating");
   rd_player->validate("Failed validating");
   rd_bullet->validate("Failed validating");
+  rd_ebullet->validate("Failed validating");
 
   wr_enemy_c->validate("Failed validating");
   wr_player_c->validate("Failed validating");
   wr_bullet_c->validate("Failed validating");
+  wr_ebullet_c->validate("Failed validating");
 
   for (;;)
   {
@@ -76,6 +80,14 @@ void *core_collission(void *arg)
       f_bullet = 1;
     }
 
+    if(rd_ebullet->count() > 0)
+    {
+      ebullet_param = rd_ebullet->front();
+      rd_ebullet->pop();
+
+      f_ebullet = 1;
+    }
+
     // Send back
     if (f_enemy && f_bullet)
     {
@@ -90,6 +102,10 @@ void *core_collission(void *arg)
         wr_enemy_c->push(true);
       }
       f_enemy = 0; f_bullet = 0;
+    }
+
+    if (f_ebullet)
+    {
     }
 
     usleep(UPDATE_PERIOD);

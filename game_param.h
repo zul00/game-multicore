@@ -15,6 +15,7 @@
 
 #define INIT_POS        DVI_WIDTH/2
 #define P_BULLETS 1
+#define E_BULLETS 1
 
 // Enemy
 #define ENEMY_HEIGHT  20
@@ -93,5 +94,14 @@ extern CFifo<bool,CFifo<>::r> *rd_bullet_c;
 
 extern CFifo<bullet_param_t,CFifo<>::w> *wr_bullet_r;
 extern CFifo<bullet_param_t,CFifo<>::r> *rd_bullet_r;
+
+extern CFifo<bullet_param_t,CFifo<>::w> *wr_ebullet;
+extern CFifo<bullet_param_t,CFifo<>::r> *rd_ebullet;
+
+extern CFifo<bool,CFifo<>::w> *wr_ebullet_c;
+extern CFifo<bool,CFifo<>::r> *rd_ebullet_c;
+
+extern CFifo<bullet_param_t,CFifo<>::w> *wr_ebullet_r;
+extern CFifo<bullet_param_t,CFifo<>::r> *rd_ebullet_r;
 
 #endif
