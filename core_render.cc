@@ -52,11 +52,13 @@ void *core_render(void *arg)
 {
   player_param_t player_param;
   bullet_param_t pbullet_param;
+  bullet_param_t ebullet_param;
   enemy_param_t enemy_param;
 
   bool f_enemy = false;
   bool f_player = false;
   bool f_bullet = false;
+  bool f_ebullet = false;
 
 //  printf("Hello Display!!!\n");
 
@@ -67,6 +69,7 @@ void *core_render(void *arg)
   // Check FIFO
   rd_player_r->validate("Failed validating");
   rd_bullet_r->validate("Failed validating");
+  rd_ebullet_r->validate("Failed validating");
   rd_enemy_r->validate("Failed validating");
 
   // Reset screen
@@ -92,6 +95,14 @@ void *core_render(void *arg)
       f_bullet = true;
     }
 
+    if (rd_ebullet_r->count())
+    {
+      ebullet_param = rd_ebullet_r->front();
+      rd_ebullet_r->pop();
+
+      f_ebullet = true;
+    }
+
     if (rd_enemy_r->count())
     {
       enemy_param = rd_enemy_r->front();
@@ -103,15 +114,17 @@ void *core_render(void *arg)
     /* Draw Stuffs */
     // Background
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
+    // Bullet
+    if (f_bullet)
+    {draw_bullets(pbullet_param);}
+    if (f_ebullet)
+    {draw_bullets(ebullet_param);}
     // Player
     if (f_player)
     {draw_player(player_param);}
     // Enemy
     if (f_enemy)
     {draw_enemy(enemy_param);}
-    // Bullet
-    if (f_bullet)
-    {draw_bullets(pbullet_param);}
     // Stats
     drawstring(20, 20, "Space Invader", black, -1, -1);   
 

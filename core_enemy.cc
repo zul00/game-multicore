@@ -76,6 +76,13 @@ void *core_enemy(void *arg)
   enemy_param.box.h = ENEMY_HEIGHT;
   enemy_param.alive = 1;
 
+  // Initialize bullet
+  bullet_param.box.x = INIT_POS;
+  bullet_param.box.y = TOP_POS;
+  bullet_param.box.w = BULLET_WIDTH;
+  bullet_param.box.h = BULLET_HEIGHT;
+  bullet_param.alive = false;
+
   // Initialize random
   srand((unsigned) time(&t));
 
@@ -103,7 +110,10 @@ void *core_enemy(void *arg)
     }
 
     // Enemy shoot
-    enemy_shoot(&bullet_param, &enemy_param);
+    if (enemy_param.alive)
+    {
+      enemy_shoot(&bullet_param, &enemy_param);
+    }
     move_ebullets(&bullet_param, 15);
     if (rd_ebullet_c->count() > 0)
     {
