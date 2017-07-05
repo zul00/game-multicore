@@ -131,7 +131,14 @@ void *core_render(void *arg)
     {draw_enemy(enemy_param);}
     // Stats
     drawstring(20, 20, "Space Invader", pink, -1, -1);   
-
+    if (!enemy_param.alive)
+    {
+      drawstring(DVI_WIDTH/2, DVI_HEIGHT/2, "WIN!!!", pink, -1, -1);   
+    }
+    if (!player_param.alive)
+    {
+      drawstring(DVI_WIDTH/2, DVI_HEIGHT/2, "GAME OVER!!!", red, -1, -1);   
+    }
     render_flip_buffer();
 
     usleep(RENDER_PERIOD);
