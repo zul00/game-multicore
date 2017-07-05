@@ -56,6 +56,7 @@ void *core_player(void *arg)
 {
   uint16_t input = 0;
   bool bullet_alive_prev = 0;
+  bool player_alive_prev = 0;
   player_param_t player_param;
   bullet_param_t bullet_param;
 
@@ -65,6 +66,7 @@ void *core_player(void *arg)
   // Check FIFO
   rd_btn->validate("Failed validating");
   wr_player->validate("Failed validating");
+  rd_player_c->validate("Failed validating");
   wr_player_r->validate("Failed validating");
   wr_bullet->validate("Failed validating");
   wr_bullet_r->validate("Failed validating");
@@ -74,6 +76,7 @@ void *core_player(void *arg)
   player_param.box.y = BOTTOM_POS;
   player_param.box.w = PLAYER_WIDTH;
   player_param.box.h = PLAYER_HEIGHT;
+  player_param.alive = true;
 
   // Initialize bullet
   bullet_param.box.x = INIT_POS;
@@ -93,6 +96,15 @@ void *core_player(void *arg)
     else
     {
       input = BTN_NO_EVENT;
+    }
+
+    // Check for collision
+    if(rd_player_c->count() > 0)
+    {
+      player_param.alive = !rd_player_c->front();
+      rd_player_c->pop();
+
+      printf("Collision event Detected\n");
     }
 
     // Handle button FIFO
@@ -123,11 +135,8 @@ void *core_player(void *arg)
         default:
           break;
       }
-      player_param.health  = 100;
 
       printf("button pressed = %s\n ", btn_string[input]);
-      wr_player->push(player_param);
-      wr_player_r->push(player_param);
     }
 
     // Update other things
@@ -136,6 +145,21 @@ void *core_player(void *arg)
     {
       bullet_param.alive = !rd_bullet_c->front();
       rd_bullet_c->pop();
+    }
+
+    // Push player
+    if (player_param.alive == true)
+    {
+      wr_player->push(player_param);
+      wr_player_r->push(player_param);
+    }
+    else
+    {
+      if (player_alive_prev)
+      {
+        wr_player_r->push(player_param);
+        printf("Player last update\n");
+      }
     }
 
     // Push bullet

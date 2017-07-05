@@ -50,7 +50,7 @@ typedef struct
 typedef struct
 {
   box_area_t box;
-  int16_t health;
+  bool alive;
 } player_param_t;
 
 typedef struct

@@ -88,6 +88,7 @@ void *core_enemy(void *arg)
 
   for (;;)
   {
+    // Check for collision
     if(rd_enemy_c->count() > 0)
     {
       enemy_param.alive = !rd_enemy_c->front();

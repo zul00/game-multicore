@@ -40,7 +40,9 @@ void *core_collission(void *arg)
   player_param_t player_param;
 
   bool hit = 0;
+  bool hitp = 0;
   bool f_enemy = 0;
+  bool f_player = 0;
   bool f_bullet = 0;
   bool f_ebullet = 0;
 
@@ -70,6 +72,8 @@ void *core_collission(void *arg)
     {
       player_param = rd_player->front();
       rd_player->pop();
+
+      f_player = 1;
     }
 
     if(rd_bullet->count() > 0)
@@ -104,8 +108,19 @@ void *core_collission(void *arg)
       f_enemy = 0; f_bullet = 0;
     }
 
-    if (f_ebullet)
+    if (f_player && f_ebullet)
     {
+      hitp = collision_detect(player_param.box, ebullet_param.box);
+      if (hitp == 1)
+      {
+        printf("Hit detect player = %d\n", hitp);
+        ebullet_param.alive = 0;
+        player_param.alive = 0;
+        hit = 0;
+        wr_ebullet_c->push(true);
+        wr_player_c->push(true);
+      }
+      f_player = 0; f_ebullet = 0;
     }
 
     usleep(UPDATE_PERIOD);
