@@ -74,7 +74,7 @@ void *core_enemy(void *arg)
   enemy_param.box.y = TOP_POS;
   enemy_param.box.w = ENEMY_WIDTH;
   enemy_param.box.h = ENEMY_HEIGHT;
-  enemy_param.alive = 1;
+  enemy_param.alive = true;
 
   // Initialize bullet
   bullet_param.box.x = INIT_POS;

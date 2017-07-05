@@ -10,8 +10,8 @@
 
 /* Config Parameter */
 // Player
-#define PLAYER_HEIGHT   20
-#define PLAYER_WIDTH    50
+#define PLAYER_HEIGHT   10
+#define PLAYER_WIDTH    25
 
 #define INIT_POS        DVI_WIDTH/2
 #define P_BULLETS 1

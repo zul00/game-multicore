@@ -10,16 +10,19 @@
 void player_shoot(bullet_param_t *bullet, player_param_t *player)
 {
   // Shoot only if there is still bullet that is NOT alive 
-  if (bullet->alive == 0) 
-  {                                                
-    //count number of shots fired
-    //score.shots++;
+  if (player->alive)
+  {
+    if (bullet->alive == 0) 
+    {                                                
+      //count number of shots fired
+      //score.shots++;
 
-    // Update bullet position w/ player position
-    bullet->box.x = player->box.x + (PLAYER_WIDTH / 2);
-    bullet->box.y = player->box.y - (bullet->box.h + 10);
+      // Update bullet position w/ player position
+      bullet->box.x = player->box.x + (PLAYER_WIDTH / 2);
+      bullet->box.y = player->box.y - (bullet->box.h + 10);
 
-    bullet->alive = 1; 
+      bullet->alive = 1; 
+    }
   }
 }
 
@@ -105,6 +108,7 @@ void *core_player(void *arg)
       rd_player_c->pop();
 
       printf("Collision event Detected\n");
+      printf("player status = %d\n", player_param.alive);
     }
 
     // Handle button FIFO
@@ -115,16 +119,22 @@ void *core_player(void *arg)
       switch(input)
       {
         case BTN_LEFT:
-          if (player_param.box.x > MIN_POS)
+          if (player_param.alive)
           {
-            player_param.box.x -= INC_POS;
+            if (player_param.box.x > MIN_POS)
+            {
+              player_param.box.x -= INC_POS;
+            }
           }
           break;
 
         case BTN_RIGHT:
-          if (player_param.box.x < MAX_POS)
+          if (player_param.alive)
           {
-            player_param.box.x += INC_POS;
+            if (player_param.box.x < MAX_POS)
+            {
+              player_param.box.x += INC_POS;
+            }
           }
           break;
 
@@ -179,6 +189,7 @@ void *core_player(void *arg)
 
     // Update previous value
     bullet_alive_prev = bullet_param.alive;
+    player_alive_prev = player_param.alive;
 
     usleep(UPDATE_PERIOD);
   }

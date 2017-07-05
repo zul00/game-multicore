@@ -16,7 +16,7 @@ void draw_bullets(bullet_param_t bullet)
     fillrect(
         bullet.box.x,               bullet.box.y, 
         bullet.box.x+bullet.box.w,  bullet.box.y-bullet.box.h,
-        red);
+        white);
   }
 }
 
@@ -25,10 +25,14 @@ void draw_bullets(bullet_param_t bullet)
  */
 void draw_player(player_param_t param)
 {
-  fillrect(
-      param.box.x,              param.box.y, 
-      param.box.x+param.box.w,  param.box.y-param.box.h,
-      black);
+  if (param.alive != 0)
+  {
+    printf("Alive?%d\n", param.alive);
+    fillrect(
+        param.box.x,              param.box.y, 
+        param.box.x+param.box.w,  param.box.y-param.box.h,
+        yellow);
+  }
 }
 
 /**
@@ -41,7 +45,7 @@ void draw_enemy(enemy_param_t param)
     fillrect(
         param.box.x,              param.box.y, 
         param.box.x+param.box.w,  param.box.y-param.box.h,
-        green);
+        red);
   }
 }
 
@@ -73,7 +77,7 @@ void *core_render(void *arg)
   rd_enemy_r->validate("Failed validating");
 
   // Reset screen
-  fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
+  fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, black);
   render_flip_buffer();
 
   for (;;)
@@ -113,7 +117,7 @@ void *core_render(void *arg)
 
     /* Draw Stuffs */
     // Background
-    fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, orange);
+    fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, black);
     // Bullet
     if (f_bullet)
     {draw_bullets(pbullet_param);}
@@ -126,7 +130,7 @@ void *core_render(void *arg)
     if (f_enemy)
     {draw_enemy(enemy_param);}
     // Stats
-    drawstring(20, 20, "Space Invader", black, -1, -1);   
+    drawstring(20, 20, "Space Invader", pink, -1, -1);   
 
     render_flip_buffer();
 
