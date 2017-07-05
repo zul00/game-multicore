@@ -7,6 +7,8 @@
 
 #include "core_enemy.h"
 
+#define INC_ENEMY 5
+
 /**
  * @brief Enemy shoot
  */
@@ -58,6 +60,7 @@ void *core_enemy(void *arg)
   bool bullet_alive_prev = 0;
   bool enemy_alive_prev = 0;
   time_t t;
+  uint16_t enemy_dir = 0;
 
 //  printf("Hello Enemy Alg!!!\n");
 
@@ -93,6 +96,29 @@ void *core_enemy(void *arg)
     {
       enemy_param.alive = !rd_enemy_c->front();
       rd_enemy_c->pop();
+    }
+
+    if (enemy_dir == 0)
+    {
+      if (enemy_param.box.x+ENEMY_WIDTH < DVI_WIDTH)
+      {
+        enemy_param.box.x += INC_ENEMY;
+      }
+      else
+      {
+        enemy_dir = 1;
+      }
+    }
+    else
+    {
+      if (enemy_param.box.x > 0)
+      {
+        enemy_param.box.x -= INC_ENEMY;
+      }
+      else
+      {
+        enemy_dir = 0;
+      }
     }
 
     // Push enemy
