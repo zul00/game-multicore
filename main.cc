@@ -33,6 +33,9 @@
 CFifo<btn_event_e,CFifo<>::w> *wr_btn;
 CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 
+CFifo<btn_event_e,CFifo<>::w> *wr_btne;
+CFifo<btn_event_e,CFifo<>::r> *rd_btne;
+
 CFifo<player_param_t,CFifo<>::w> *wr_player;
 CFifo<player_param_t,CFifo<>::r> *rd_player;
 
@@ -79,6 +82,10 @@ int main()
   CFifoPtr<btn_event_e> ff_input = 
     CFifo<btn_event_e>::Create(CORE_INPUT, wr_btn, CORE_PLAYER, rd_btn, 10);
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
+
+  CFifoPtr<btn_event_e> ff_inpute = 
+    CFifo<btn_event_e>::Create(CORE_INPUT, wr_btne, CORE_ENEMY, rd_btne, 10);
+  if(!ff_inpute.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<player_param_t> ff_player = 
     CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_COLLISSION, rd_player, 10);
@@ -130,6 +137,8 @@ int main()
   if(!ff_ebullet_r.valid()) ERREXIT("Error creating buffer");
 
   // Flush FIFO
+  mc_flush(ff_input);
+  mc_flush(ff_inpute);
   mc_flush(ff_player);
   mc_flush(ff_player_r);
   mc_flush(ff_enemy);

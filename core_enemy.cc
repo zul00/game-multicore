@@ -55,6 +55,7 @@ int move_ebullets(bullet_param_t *bullet, int speed)
 
 void *core_enemy(void *arg)
 {
+  uint16_t input = 0;
   enemy_param_t enemy_param;
   bullet_param_t bullet_param;
   bool bullet_alive_prev = 0;
@@ -66,6 +67,7 @@ void *core_enemy(void *arg)
 
   /* Initialize */
   // Check FIFO
+  rd_btne->validate("Failed validating");
   wr_enemy->validate("Failed validating");
   wr_enemy_r->validate("Failed validating");
   rd_enemy_c->validate("Failed validating");
@@ -96,6 +98,37 @@ void *core_enemy(void *arg)
     {
       enemy_param.alive = !rd_enemy_c->front();
       rd_enemy_c->pop();
+    }
+
+    // Read button FIFO if there's data
+    if(rd_btne->count() > 0)
+    {
+      printf("Event detected\n");
+      input = rd_btne->front();
+      rd_btne->pop();
+    }
+    else
+    {
+      input = BTN_NO_EVENT;
+    }
+
+    if (input == BTN_DOWN)
+    {
+      printf("Here!!!\n");
+      // Initialize enemy
+      enemy_param.box.x = INIT_POS;
+      enemy_param.box.y = TOP_POS;
+      enemy_param.box.w = ENEMY_WIDTH;
+      enemy_param.box.h = ENEMY_HEIGHT;
+      enemy_param.alive = true;
+
+      // Initialize bullet
+      bullet_param.box.x = INIT_POS;
+      bullet_param.box.y = TOP_POS;
+      bullet_param.box.w = BULLET_WIDTH;
+      bullet_param.box.h = BULLET_HEIGHT;
+      bullet_param.alive = false;
+
     }
 
     if (enemy_dir == 0)

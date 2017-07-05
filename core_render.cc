@@ -27,7 +27,6 @@ void draw_player(player_param_t param)
 {
   if (param.alive != 0)
   {
-    printf("Alive?%d\n", param.alive);
     fillrect(
         param.box.x,              param.box.y, 
         param.box.x+param.box.w,  param.box.y-param.box.h,

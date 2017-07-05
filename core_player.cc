@@ -142,6 +142,22 @@ void *core_player(void *arg)
           player_shoot(&bullet_param, &player_param);
           break;
 
+        case BTN_DOWN:
+          // Initialize player
+          player_param.box.x = INIT_POS;
+          player_param.box.y = BOTTOM_POS;
+          player_param.box.w = PLAYER_WIDTH;
+          player_param.box.h = PLAYER_HEIGHT;
+          player_param.alive = true;
+
+          // Initialize bullet
+          bullet_param.box.x = INIT_POS;
+          bullet_param.box.y = BOTTOM_POS;
+          bullet_param.box.w = BULLET_WIDTH;
+          bullet_param.box.h = BULLET_HEIGHT;
+          bullet_param.alive = false;
+          break;
+
         default:
           break;
       }

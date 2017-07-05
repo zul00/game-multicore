@@ -27,6 +27,7 @@ void *core_input(void *arg)
 
   // Check FIFO
   wr_btn->validate("Failed validating");
+  wr_btne->validate("Failed validating");
   while(1)
   {
     // Get buttons state
@@ -38,6 +39,7 @@ void *core_input(void *arg)
       if (bt_state & (1 << idx))
       { // Push index of active button
         wr_btn->push((btn_event_e)idx);
+        wr_btne->push((btn_event_e)idx);
       }
     }
 

@@ -68,6 +68,9 @@ typedef struct
 extern CFifo<btn_event_e,CFifo<>::w> *wr_btn;
 extern CFifo<btn_event_e,CFifo<>::r> *rd_btn;
 
+extern CFifo<btn_event_e,CFifo<>::w> *wr_btne;
+extern CFifo<btn_event_e,CFifo<>::r> *rd_btne;
+
 extern CFifo<player_param_t,CFifo<>::w> *wr_player;
 extern CFifo<player_param_t,CFifo<>::r> *rd_player;
 
