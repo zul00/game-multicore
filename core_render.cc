@@ -1,5 +1,8 @@
 #include <helix.h>
 
+#include <string.h>
+#include <time.h>
+
 #include "game_param.h"
 
 #include "core_input.h"
@@ -57,6 +60,9 @@ void *core_render(void *arg)
   bullet_param_t pbullet_param;
   bullet_param_t ebullet_param;
   enemy_param_t enemy_param;
+  struct timespec start = {0,0}, finish={0,0}; 
+  double elapsed; 
+  char string[20];
 
   bool f_enemy = false;
   bool f_player = false;
@@ -81,6 +87,12 @@ void *core_render(void *arg)
 
   for (;;)
   {
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    elapsed = (start.tv_sec - finish.tv_sec);
+    elapsed += (start.tv_nsec - finish.tv_nsec) / 1000000000.0;
+    sprintf(string, "FPS = %.0f", 1/elapsed);
+    finish = start;
+    
     /* Check FIFO */
     if (rd_player_r->count())
     {
@@ -117,6 +129,7 @@ void *core_render(void *arg)
     /* Draw Stuffs */
     // Background
     fillrect(0, 0, DVI_WIDTH, DVI_HEIGHT, black);
+    drawstring(500, 20, string, green, -1, -1);   
     // Bullet
     if (f_bullet)
     {draw_bullets(pbullet_param);}
@@ -132,7 +145,7 @@ void *core_render(void *arg)
     drawstring(20, 20, "Space Invader", pink, -1, -1);   
     if (!enemy_param.alive)
     {
-      drawstring(DVI_WIDTH/2, DVI_HEIGHT/2, "WIN!!!", pink, -1, -1);   
+      drawstring(DVI_WIDTH/2, (DVI_HEIGHT/2)+20, "WIN!!!", pink, -1, -1);   
     }
     if (!player_param.alive)
     {

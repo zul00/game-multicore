@@ -80,60 +80,60 @@ int main()
 
   /* Initialize */
   CFifoPtr<btn_event_e> ff_input = 
-    CFifo<btn_event_e>::Create(CORE_INPUT, wr_btn, CORE_PLAYER, rd_btn, 10);
+    CFifo<btn_event_e>::Create(CORE_INPUT, wr_btn, CORE_PLAYER, rd_btn, 3);
   if(!ff_input.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<btn_event_e> ff_inpute = 
-    CFifo<btn_event_e>::Create(CORE_INPUT, wr_btne, CORE_ENEMY, rd_btne, 10);
+    CFifo<btn_event_e>::Create(CORE_INPUT, wr_btne, CORE_ENEMY, rd_btne, 3);
   if(!ff_inpute.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<player_param_t> ff_player = 
-    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_COLLISSION, rd_player, 10);
+    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player, CORE_COLLISSION, rd_player, 3);
   if(!ff_player.valid()) ERREXIT("Error creating buffer");
   
   CFifoPtr<bool> ff_player_c = 
-    CFifo<bool>::Create(CORE_COLLISSION, wr_player_c, CORE_PLAYER, rd_player_c, 10);
+    CFifo<bool>::Create(CORE_COLLISSION, wr_player_c, CORE_PLAYER, rd_player_c, 3);
   if(!ff_player_c.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<player_param_t> ff_player_r = 
-    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player_r, CORE_RENDER, rd_player_r, 10);
+    CFifo<player_param_t>::Create(CORE_PLAYER, wr_player_r, CORE_RENDER, rd_player_r, 3);
   if(!ff_player_r.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bullet_param_t> ff_bullet = 
-    CFifo<bullet_param_t>::Create(CORE_PLAYER, wr_bullet, CORE_COLLISSION, rd_bullet, 10);
+    CFifo<bullet_param_t>::Create(CORE_PLAYER, wr_bullet, CORE_COLLISSION, rd_bullet, 3);
   if(!ff_bullet.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bool> ff_bullet_c = 
-    CFifo<bool>::Create(CORE_COLLISSION, wr_bullet_c, CORE_PLAYER, rd_bullet_c, 10);
+    CFifo<bool>::Create(CORE_COLLISSION, wr_bullet_c, CORE_PLAYER, rd_bullet_c, 3);
   if(!ff_bullet_c.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bullet_param_t> ff_bullet_r = 
-    CFifo<bullet_param_t>::Create(CORE_PLAYER, wr_bullet_r, CORE_RENDER, rd_bullet_r, 10);
+    CFifo<bullet_param_t>::Create(CORE_PLAYER, wr_bullet_r, CORE_RENDER, rd_bullet_r, 3);
   if(!ff_bullet_r.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<enemy_param_t> ff_enemy = 
-    CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy, CORE_COLLISSION, rd_enemy, 10);
+    CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy, CORE_COLLISSION, rd_enemy, 3);
   if(!ff_enemy.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bool> ff_enemy_c = 
-    CFifo<bool>::Create(CORE_COLLISSION, wr_enemy_c, CORE_ENEMY, rd_enemy_c, 10);
+    CFifo<bool>::Create(CORE_COLLISSION, wr_enemy_c, CORE_ENEMY, rd_enemy_c, 3);
   if(!ff_enemy_c.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<enemy_param_t> ff_enemy_r = 
-    CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy_r, CORE_RENDER, rd_enemy_r, 10);
+    CFifo<enemy_param_t>::Create(CORE_ENEMY, wr_enemy_r, CORE_RENDER, rd_enemy_r, 3);
   if(!ff_enemy_r.valid()) ERREXIT("Error creating buffer");
 
   // Enemy bullet
   CFifoPtr<bullet_param_t> ff_ebullet = 
-    CFifo<bullet_param_t>::Create(CORE_ENEMY, wr_ebullet, CORE_COLLISSION, rd_ebullet, 10);
+    CFifo<bullet_param_t>::Create(CORE_ENEMY, wr_ebullet, CORE_COLLISSION, rd_ebullet, 3);
   if(!ff_ebullet.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bool> ff_ebullet_c = 
-    CFifo<bool>::Create(CORE_COLLISSION, wr_ebullet_c, CORE_ENEMY, rd_ebullet_c, 10);
+    CFifo<bool>::Create(CORE_COLLISSION, wr_ebullet_c, CORE_ENEMY, rd_ebullet_c, 3);
   if(!ff_ebullet_c.valid()) ERREXIT("Error creating buffer");
 
   CFifoPtr<bullet_param_t> ff_ebullet_r = 
-    CFifo<bullet_param_t>::Create(CORE_ENEMY, wr_ebullet_r, CORE_RENDER, rd_ebullet_r, 10);
+    CFifo<bullet_param_t>::Create(CORE_ENEMY, wr_ebullet_r, CORE_RENDER, rd_ebullet_r, 3);
   if(!ff_ebullet_r.valid()) ERREXIT("Error creating buffer");
 
   // Flush FIFO
